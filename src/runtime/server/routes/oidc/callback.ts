@@ -4,7 +4,7 @@ import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
-  console.log('callback calling')
+  console.log('oidc/callback calling')
   const { op } = useRuntimeConfig().openidConnect
   console.log(op)
   const issueClient = await initClient(op)
