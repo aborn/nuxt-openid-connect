@@ -2,8 +2,25 @@ import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
 import { name, version } from '../package.json'
 
+export type OidcProvider = {
+  issuer: string,
+  clientId: string,
+  clientSecret: string,
+  callbackUrl: string,
+  scope: Array<string>
+}
+
+export type ConfigSession = {
+    secret: string,
+    cookie: {},
+    resave: boolean,
+    saveUninitialized: boolean
+}
+
 export interface ModuleOptions {
-  addPlugin: boolean
+  addPlugin: boolean,
+  op: OidcProvider,
+  session: ConfigSession
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -18,11 +35,11 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     addPlugin: true,
-    oidcProvider: {
+    op: {
       issuer: '',
       clientId: '',
       clientSecret: '',
-      callbackUrl: 'http://localhost:3000/oidc/callback',
+      callbackUrl: 'http://localhost:3000/oidc/cbt',
       scope: [
         'email',
         'profile',
@@ -38,6 +55,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   setup(options, nuxt) {
+    console.log(options.op)
     const { resolve } = createResolver(import.meta.url)
     const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })
 
