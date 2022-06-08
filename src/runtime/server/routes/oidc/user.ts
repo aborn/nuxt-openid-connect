@@ -1,6 +1,6 @@
 import { createError, defineEventHandler } from 'h3'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler((event) => {
   return {
   }
 })
