@@ -1,4 +1,5 @@
-# Nuxt Module
+# Nuxt Moduleo
+OpenID-Connect(OIDC) implemetation module for nuxt 3.0.
 
 ## Development
 

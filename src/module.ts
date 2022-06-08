@@ -1,6 +1,7 @@
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin } from '@nuxt/kit'
+import { name, version } from '../package.json'
 
 export interface ModuleOptions {
   addPlugin: boolean
@@ -8,8 +9,13 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'my-module',
-    configKey: 'myModule'
+    name,
+    version,
+    configKey: 'openidConnect',
+    compatibility: {
+      // Semver version of supported nuxt versions
+      nuxt: '^3.0.0'
+    }
   },
   defaults: {
     addPlugin: true

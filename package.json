@@ -1,5 +1,5 @@
 {
-  "name": "my-module",
+  "name": "nuxt-openid-connect",
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",

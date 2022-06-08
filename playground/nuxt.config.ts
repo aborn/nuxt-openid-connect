@@ -1,11 +1,11 @@
 import { defineNuxtConfig } from 'nuxt'
-import MyModule from '..'
+import openidConnect from '..'
 
 export default defineNuxtConfig({
   modules: [
-    MyModule
+    openidConnect
   ],
-  myModule: {
+  openidConnect: {
     addPlugin: true
   }
 })
