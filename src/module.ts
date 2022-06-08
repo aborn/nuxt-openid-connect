@@ -1,6 +1,5 @@
-import { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { defineNuxtModule, addPlugin } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
 import { name, version } from '../package.json'
 
 export interface ModuleOptions {
@@ -18,9 +17,60 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {
-    addPlugin: true
+    addPlugin: true,
+    oidcProvider: {
+      issuer: '',
+      clientId: '',
+      clientSecret: '',
+      callbackUrl: 'http://localhost:3000/oidc/callback',
+      scope: [
+        'email',
+        'profile',
+        'address'
+      ]
+    },
+    // express-session configuration
+    session: {
+      secret: 'process.env.OIDC_SESSION_SECRET',
+      cookie: {},
+      resave: false,
+      saveUninitialized: false
+    }
   },
-  setup (options, nuxt) {
+  setup(options, nuxt) {
+    const { resolve } = createResolver(import.meta.url)
+    const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })
+
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      // Add server handlers
+      nitroConfig.handlers = nitroConfig.handlers || []
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/api/hello',
+        handler: resolveRuntimeModule('./server/api/hello')
+      })
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/oidc/login',
+        handler: resolveRuntimeModule('./server/routes/oidc/login')
+      })
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/oidc/callback',
+        handler: resolveRuntimeModule('./server/routes/oidc/callback')
+      })
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/oidc/user',
+        handler: resolveRuntimeModule('./server/routes/oidc/user')
+      })
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/oidc/cbt',
+        handler: resolveRuntimeModule('./server/routes/oidc/cbt')
+      })
+    })
+
     if (options.addPlugin) {
       const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
       nuxt.options.build.transpile.push(runtimeDir)
