@@ -1,20 +1,21 @@
 import { createError, defineEventHandler } from 'h3'
-import Auth from '../../../auth/auth'
 
-const auth = new Auth()
+import { initClient } from '../../../utils/issueclient'
+import { useRuntimeConfig } from '#imports'
+
 export default defineEventHandler(async (event) => {
-  console.log('callback caling')
-  const req = event.req
-  console.log(req.url)
-  console.log()
-  console.log(event.context.params)
-  const client = await auth.initClient()
+  console.log('callback calling')
+  const { op } = useRuntimeConfig().openidConnect
+  console.log(op)
+  const issueClient = await initClient(op)
 
-  const params = client.callbackParams(req)
+  const req = event.req
+  console.log(event.context.params)
+  const params = issueClient.callbackParams(req)
 
   console.log(params)
   if (params.access_token) {
-    const userinfo = await client.userinfo(params.access_token)
+    const userinfo = await issueClient.userinfo(params.access_token)
     console.log(userinfo)
     return userinfo
   } else {
