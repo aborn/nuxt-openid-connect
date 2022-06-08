@@ -89,6 +89,11 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
+    // Context will use in server
+    nuxt.options.runtimeConfig.openidConnect = {
+      ...options as any
+    }
+
     if (options.addPlugin) {
       const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
       nuxt.options.build.transpile.push(runtimeDir)
