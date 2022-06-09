@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
   console.log(sessionid)
 
   const req = event.req
+  const res = event.res
   console.log(event.context.params)
   const params = issueClient.callbackParams(req)
 
@@ -27,9 +28,9 @@ export default defineEventHandler(async (event) => {
     })
     const userinfo = await issueClient.userinfo(params.access_token)
     console.log(userinfo)
-    return userinfo
   } else {
     console.log('empty callback')
-    return {}
   }
+  res.writeHead(302, { Location: '/' })
+  res.end()
 })
