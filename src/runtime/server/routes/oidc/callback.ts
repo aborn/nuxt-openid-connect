@@ -1,4 +1,4 @@
-import { createError, defineEventHandler } from 'h3'
+import { defineEventHandler } from 'h3'
 
 import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
