@@ -74,6 +74,11 @@ export default defineNuxtModule<ModuleOptions>({
       })
       nitroConfig.handlers.push({
         method: 'get',
+        route: '/oidc/logout',
+        handler: resolveRuntimeModule('./server/routes/oidc/logout')
+      })
+      nitroConfig.handlers.push({
+        method: 'get',
         route: '/oidc/callback',
         handler: resolveRuntimeModule('./server/routes/oidc/callback')
       })

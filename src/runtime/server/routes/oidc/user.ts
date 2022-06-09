@@ -3,8 +3,6 @@ import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
-  const req = event.req
-  const res = event.res
   const { session, op } = useRuntimeConfig().openidConnect
   const issueClient = await initClient(op)
   console.log('oidc/user calling')
