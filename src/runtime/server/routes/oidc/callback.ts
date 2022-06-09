@@ -8,11 +8,11 @@ export default defineEventHandler(async (event) => {
   const { op, session } = useRuntimeConfig().openidConnect
   const issueClient = await initClient(op)
   const sessionid = useCookie(event, session.secret)
-  console.log(sessionid)
+  // console.log(sessionid)
 
   const req = event.req
   const res = event.res
-  console.log(event.context.params)
+  // console.log(event.context.params)
   const params = issueClient.callbackParams(req)
 
   // TODO id_token check
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
       maxAge: 24 * 60 * 60 // one day
     })
     const userinfo = await issueClient.userinfo(params.access_token)
-    console.log(userinfo)
+    // console.log(userinfo)
   } else {
     console.log('empty callback')
   }

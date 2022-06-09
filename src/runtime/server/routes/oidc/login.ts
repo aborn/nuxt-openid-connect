@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const sessionkey = session.secret
   let sessionid = useCookie(event, session.secret)
   if (!sessionid) {
-    console.log('regenerate sessionid')
+    // console.log('regenerate sessionid')
     sessionid = uuidv4()
   }
 

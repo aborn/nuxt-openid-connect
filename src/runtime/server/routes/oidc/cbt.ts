@@ -9,7 +9,7 @@ export default defineEventHandler((event) => {
 
   const sessionkey = session.secret
   const sessionid = useCookie(event, sessionkey)
-  console.log(sessionid)
+  // console.log(sessionid)
   /* setCookie(event, sessionkey, sessionid, {
     maxAge: 24 * 60 * 60 // oneday
   }) */
