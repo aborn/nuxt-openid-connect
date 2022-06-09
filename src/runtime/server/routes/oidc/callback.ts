@@ -14,8 +14,17 @@ export default defineEventHandler(async (event) => {
   console.log(event.context.params)
   const params = issueClient.callbackParams(req)
 
+  // TODO id_token check
+  // const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
+  // const tokenSet = await issueClient.callback(callBackUrl, event.context.params, { nonce: sessionid })
+  // console.log('received and validated tokens %j', tokenSet)
+  // console.log('validated ID Token claims %j', tokenSet.claims())
+
   console.log(params)
   if (params.access_token) {
+    setCookie(event, 'oidc._access_token', params.access_token, {
+      maxAge: 24 * 60 * 60 // one day
+    })
     const userinfo = await issueClient.userinfo(params.access_token)
     console.log(userinfo)
     return userinfo

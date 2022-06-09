@@ -1,4 +1,4 @@
-import { defineEventHandler, setCookie } from 'h3'
+import { defineEventHandler, setCookie, useCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
 
 import { initClient } from '../../../utils/issueclient'
@@ -12,7 +12,13 @@ export default defineEventHandler(async (event) => {
   const req = event.req
   const res = event.res
 
-  const sessionid = uuidv4()
+  const sessionkey = session.secret
+  let sessionid = useCookie(event, session.secret)
+  if (!sessionid) {
+    console.log('regenerate sessionid')
+    sessionid = uuidv4()
+  }
+
   const parameters = {
     redirect_uri: op.callbackUrl,
     response_type: 'id_token',
@@ -22,7 +28,6 @@ export default defineEventHandler(async (event) => {
   const authUrl = issueClient.authorizationUrl(parameters)
   // console.log(authUrl)
 
-  const sessionkey = session.secret
   console.log(sessionid)
   setCookie(event, sessionkey, sessionid, {
     maxAge: 24 * 60 * 60 // one day

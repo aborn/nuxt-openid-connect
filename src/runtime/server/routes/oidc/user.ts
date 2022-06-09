@@ -1,17 +1,28 @@
 import { useCookie, defineEventHandler } from 'h3'
+import { initClient } from '../../../utils/issueclient'
+import { useRuntimeConfig } from '#imports'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const req = event.req
   const res = event.res
-  const { session } = useRuntimeConfig().openidConnect
+  const { session, op } = useRuntimeConfig().openidConnect
+  const issueClient = await initClient(op)
   console.log('oidc/user calling')
   // console.log(req.headers.cookie)
 
   const sessionid = useCookie(event, session.secret)
-  console.log(sessionid)
-  /* setCookie(event, 'sessionid', 'uid', {
-    maxAge: 24 * 60 * 60 // oneday
-  }) */
-  return {
+  const accesstoken = useCookie(event, 'oidc._access_token')
+  // console.log(sessionid)
+
+  if (accesstoken) {
+    try {
+      const userinfo = await issueClient.userinfo(accesstoken)
+      return userinfo
+    } catch (err) {
+      return {}
+    }
+  } else {
+    console.log('empty userinfo')
+    return {}
   }
 })

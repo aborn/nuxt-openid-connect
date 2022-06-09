@@ -48,7 +48,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
     // express-session configuration
     session: {
-      secret: 'oidcsessionid', // process.env.OIDC_SESSION_SECRET
+      secret: 'oidc._sessionid', // process.env.OIDC_SESSION_SECRET
       cookie: {},
       resave: false,
       saveUninitialized: false
