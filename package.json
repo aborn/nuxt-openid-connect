@@ -2,6 +2,14 @@
   "name": "nuxt-openid-connect",
   "version": "0.1.0",
   "description": "An nuxt 3 module with OpenID-Connect(OIDC) implemetation",
+  "keywords": [
+    "nuxt",
+    "oidc",
+    "module",
+    "nuxt 3.0",
+    "auth"
+  ],
+  "repository": "aborn/nuxt-openid-connect",
   "license": "MIT",
   "type": "module",
   "exports": {
