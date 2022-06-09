@@ -55,7 +55,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   setup (options, nuxt) {
-    console.log(options.op)
+    // console.log(options.op)
     const { resolve } = createResolver(import.meta.url)
     const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })
 

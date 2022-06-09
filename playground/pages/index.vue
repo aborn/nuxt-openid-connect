@@ -17,4 +17,5 @@
 <script setup>
 // alternatively, you can also use it here
 const { $oidc } = useNuxtApp()
+// const user = useState('useState')
 </script>

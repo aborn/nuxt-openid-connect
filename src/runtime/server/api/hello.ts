@@ -1,4 +1,4 @@
-import { createError, defineEventHandler } from 'h3'
+import { defineEventHandler } from 'h3'
 
 export default defineEventHandler((event) => {
   const req = event.req
