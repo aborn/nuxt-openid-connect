@@ -11,10 +11,10 @@ export type OidcProvider = {
 }
 
 export type ConfigSession = {
-    secret: string,
-    cookie: {},
-    resave: boolean,
-    saveUninitialized: boolean
+  secret: string,
+  cookie: {},
+  resave: boolean,
+  saveUninitialized: boolean
 }
 
 export interface ModuleOptions {
@@ -48,7 +48,7 @@ export default defineNuxtModule<ModuleOptions>({
     },
     // express-session configuration
     session: {
-      secret: 'process.env.OIDC_SESSION_SECRET',
+      secret: 'oidcsessionid', // process.env.OIDC_SESSION_SECRET
       cookie: {},
       resave: false,
       saveUninitialized: false
