@@ -6,24 +6,24 @@ class Oidc {
     isLoggedIn: boolean
   }
 
-  constructor() {
+  constructor () {
     this.state = { user: {}, isLoggedIn: false }
   }
 
-  get user() {
+  get user () {
     return this.state.user
   }
 
-  get isLoggedIn() {
+  get isLoggedIn () {
     return this.state.isLoggedIn
   }
 
-  setUser(user: any) {
+  setUser (user: any) {
     this.state.user = user
     this.state.isLoggedIn = Object.keys(user).length > 0
   }
 
-  async fetchUser() {
+  async fetchUser () {
     const { data, pending, refresh, error } = await useFetch('/oidc/user')
     console.log(data.value)
     this.setUser(data.value)
@@ -33,7 +33,7 @@ class Oidc {
     }
   }
 
-  login(redirect = '/') {
+  login (redirect = '/') {
     console.log('login call...')
     if (process.client) {
       console.log('client here...')
@@ -44,7 +44,7 @@ class Oidc {
     }
   }
 
-  logout() {
+  logout () {
     if (process.client) {
       window.location.replace('/oidc/logout')
     }
