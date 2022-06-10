@@ -1,5 +1,6 @@
 import { defineEventHandler, setCookie, useCookie } from 'h3'
 import { CBT_PAGE_TEMPATE } from '../../../utils/template'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {
   console.log('oidc/cbt calling')
