@@ -47,6 +47,8 @@ export default defineNuxtConfig({
 
 ```
 
+Here is an [using example](https://github.com/aborn/playgrounds/tree/main/nuxt-openid-connect-demo).
+
 ## 💻 Development
 
 - Clone repository
