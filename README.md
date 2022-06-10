@@ -8,7 +8,12 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0.
 - [State Management](https://v3.nuxtjs.org/guide/features/state-management/), shared login user info.
 - OIDC provider config
 
-## Usage
+## Why use this module 
+
+- The official [auth](https://github.com/nuxt-community/auth-module/issues/1719) module doesn't support Nuxt 3.0 yet.
+- [nuxt-oidc](https://github.com/deko2369/nuxt-oidc) also not support Nuxt 3.0.
+
+## How to use this module
 
 - Add to a project
 ```bash
