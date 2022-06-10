@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
+import defu from 'defu'
 import { name, version } from '../package.json'
 
 export type OidcProvider = {
@@ -92,9 +93,16 @@ export default defineNuxtModule<ModuleOptions>({
         route: '/oidc/cbt',
         handler: resolveRuntimeModule('./server/routes/oidc/cbt')
       })
+
+      nitroConfig.externals = defu(typeof nitroConfig.externals === 'object' ? nitroConfig.externals : {}, {
+        inline: [
+          // Inline module runtime in Nitro bundle
+          resolve('./runtime')
+        ]
+      })
     })
 
-    // Context will use in server
+    // openidConnect config will use in server
     nuxt.options.runtimeConfig.openidConnect = {
       ...options as any
     }

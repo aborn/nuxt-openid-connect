@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   // console.log('received and validated tokens %j', tokenSet)
   // console.log('validated ID Token claims %j', tokenSet.claims())
 
-  console.log(params)
+  // console.log(params)
   if (params.access_token) {
     setCookie(event, 'oidc._access_token', params.access_token, {
       maxAge: 24 * 60 * 60 // one day

@@ -1,4 +1,4 @@
-import { useCookie, defineEventHandler } from 'h3'
+import { useCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
 
@@ -17,10 +17,12 @@ export default defineEventHandler(async (event) => {
       const userinfo = await issueClient.userinfo(accesstoken)
       return userinfo
     } catch (err) {
+      console.log(err)
+      deleteCookie(event, 'oidc._access_token')
       return {}
     }
   } else {
-    console.log('empty userinfo')
+    console.log('empty accesstoken for access userinfo')
     return {}
   }
 })
