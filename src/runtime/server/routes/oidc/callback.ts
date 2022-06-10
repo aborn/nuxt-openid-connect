@@ -1,4 +1,4 @@
-import { defineEventHandler, useCookie } from 'h3'
+import { defineEventHandler, useCookie, setCookie } from 'h3'
 
 import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
