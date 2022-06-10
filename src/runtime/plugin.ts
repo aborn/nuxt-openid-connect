@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from '#app'
-import { useState } from '#imports'
+import { useState, useFetch } from '#imports'
 
 interface UseState {
   user: any,
