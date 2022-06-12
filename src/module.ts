@@ -65,8 +65,8 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.handlers = nitroConfig.handlers || []
       nitroConfig.handlers.push({
         method: 'get',
-        route: '/api/hello',
-        handler: resolveRuntimeModule('./server/api/hello')
+        route: '/oidc/status',
+        handler: resolveRuntimeModule('./server/routes/oidc/status')
       })
       nitroConfig.handlers.push({
         method: 'get',

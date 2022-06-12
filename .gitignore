@@ -1,5 +1,6 @@
 # Dependencies
 node_modules
+src/runtime/utils/user.ts
 
 # Logs
 *.log*
