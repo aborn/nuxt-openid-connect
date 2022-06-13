@@ -28,6 +28,14 @@ export default defineEventHandler(async (event) => {
       setCookie(event, session.cookiePrefix + 'access_token', params.access_token, {
         maxAge: session.maxAge // one day
       })
+      const cookie = session.cookie
+      for (const [key, value] of Object.entries(userinfo)) {
+        if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
+          setCookie(event, session.cookiePrefix + key, JSON.stringify(value), {
+            maxAge: session.maxAge // one day
+          })
+        }
+      }
       // use info cookie setting.
     } catch (err) {
       console.log(err)
