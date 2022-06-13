@@ -8,7 +8,7 @@ export default defineEventHandler((event) => {
 
   const { session } = useRuntimeConfig().openidConnect
   deleteCookie(event, session.secret)
-  deleteCookie(event, 'oidc._access_token')
+  deleteCookie(event, session.cookiePrefix + 'access_token')
   // console.log(sessionid)
 
   res.writeHead(302, { Location: '/' })

@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
   console.log(sessionid)
   setCookie(event, sessionkey, sessionid, {
-    maxAge: 24 * 60 * 60 // one day
+    maxAge: session.maxAge
   })
 
   res.writeHead(302, { Location: authUrl })

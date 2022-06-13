@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // console.log(req.headers.cookie)
 
   const sessionid = useCookie(event, session.secret)
-  const accesstoken = useCookie(event, 'oidc._access_token')
+  const accesstoken = useCookie(event, session.cookiePrefix + 'access_token')
   // console.log(sessionid)
 
   if (accesstoken) {
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
       return userinfo
     } catch (err) {
       console.log(err)
-      deleteCookie(event, 'oidc._access_token')
+      deleteCookie(event, session.cookiePrefix + 'access_token')
       return {}
     }
   } else {

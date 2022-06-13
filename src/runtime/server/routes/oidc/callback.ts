@@ -23,10 +23,15 @@ export default defineEventHandler(async (event) => {
 
   // console.log(params)
   if (params.access_token) {
-    setCookie(event, 'oidc._access_token', params.access_token, {
-      maxAge: 24 * 60 * 60 // one day
-    })
-    const userinfo = await issueClient.userinfo(params.access_token)
+    try {
+      const userinfo = await issueClient.userinfo(params.access_token)
+      setCookie(event, session.cookiePrefix + 'access_token', params.access_token, {
+        maxAge: session.maxAge // one day
+      })
+      // use info cookie setting.
+    } catch (err) {
+      console.log(err)
+    }
     // console.log(userinfo)
   } else {
     console.log('empty callback')

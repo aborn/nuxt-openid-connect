@@ -14,8 +14,8 @@ export type OidcProvider = {
 export type ConfigSession = {
   secret: string,
   cookie: {},
-  resave: boolean,
-  saveUninitialized: boolean
+  cookiePrefix: string,
+  maxAge: number
 }
 
 export interface ModuleOptions {
@@ -51,8 +51,8 @@ export default defineNuxtModule<ModuleOptions>({
     session: {
       secret: 'oidc._sessionid', // process.env.OIDC_SESSION_SECRET
       cookie: {},
-      resave: false,
-      saveUninitialized: false
+      cookiePrefix: '',
+      maxAge: 24 * 60 * 60 // one day
     }
   },
   setup (options, nuxt) {

@@ -42,10 +42,10 @@ export default defineNuxtConfig({
       ]
     },
     session: {
-      secret: 'process.env.OIDC_SESSION_SECRET',
       cookie: {},
-      resave: false,
-      saveUninitialized: false
+      cookiePrefix: 'oidc._',
+      secret: 'oidc._sessionid',
+      maxAge: 24 * 60 * 60 // one day
     }
   }
 })
