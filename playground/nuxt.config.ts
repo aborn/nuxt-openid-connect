@@ -7,11 +7,11 @@ export default defineNuxtConfig({
   ],
   openidConnect: {
     addPlugin: true,
-    oidcProvider: {
+    op: {
       issuer: 'your_issuer_value',
       clientId: 'clientid',
       clientSecret: 'secret',
-      callbackUrl: 'http://localhost:3000/oidc/callback',
+      callbackUrl: 'http://localhost:3000/oidc/cbt',
       scope: [
         'email',
         'profile',
@@ -19,10 +19,10 @@ export default defineNuxtConfig({
       ]
     },
     session: {
-      secret: 'process.env.OIDC_SESSION_SECRET',
-      cookie: {},
-      resave: false,
-      saveUninitialized: false
+      cookie: { loginName: '' },
+      cookiePrefix: 'oidc._',
+      secret: 'oidc._sessionid',
+      maxAge: 24 * 60 * 60 // one day
     }
   }
 })
