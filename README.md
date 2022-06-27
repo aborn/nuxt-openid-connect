@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   ],
   openidConnect: {
     addPlugin: true,
-    oidcProvider: {
+    op: {
       issuer: 'your_issuer_value',
       clientId: 'clientid',
       clientSecret: 'secret',
