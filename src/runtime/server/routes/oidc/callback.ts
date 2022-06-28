@@ -1,6 +1,7 @@
 import { defineEventHandler, useCookie, setCookie } from 'h3'
 
 import { initClient } from '../../../utils/issueclient'
+import { encrypt, decrypt } from '../../../utils/encrypt'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -37,6 +38,8 @@ export default defineEventHandler(async (event) => {
         }
       }
       // use info cookie setting.
+      const encryptedText = await encrypt(JSON.stringify(userinfo))
+      setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
     } catch (err) {
       console.log(err)
     }
