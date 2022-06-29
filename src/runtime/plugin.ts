@@ -10,8 +10,8 @@ interface UseState {
 
 class Oidc {
   private state: UseState // only this plugin.
-  private $useState: any // Nuxt.useState (share state in all nuxt pages and components) https://v3.nuxtjs.org/guide/features/state-management
-  public $storage: Storage // Browser.localStorage （share state in all sites, use in page refresh.）
+  private $useState: any // State: Nuxt.useState (share state in all nuxt pages and components) https://v3.nuxtjs.org/guide/features/state-management
+  public $storage: Storage // LocalStorage: Browser.localStorage （share state in all sites, use in page refresh.）
 
   constructor () {
     this.state = { user: {}, isLoggedIn: false }
@@ -60,6 +60,7 @@ class Oidc {
     try {
       const { data, pending, refresh, error } = await useFetch('/oidc/user')
       // console.log(data.value)
+      // TODO use browser cookie to get encrypt userInfo.
       this.setUser(data.value)
       if (error && error.value) {
         console.error('tinyOidc failed to fetch user data: ', error.value)
@@ -81,7 +82,6 @@ class Oidc {
 
   logout () {
     if (process.client) {
-      // todo remove cookie info
       this.$useState.value.user = {}
       this.$useState.value.isLoggedIn = false
 
