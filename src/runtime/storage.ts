@@ -8,9 +8,11 @@ export type StorageOptions = {
 
 export class Storage {
   public options: StorageOptions
+  private userInfoKey: string
 
   constructor (options: StorageOptions) {
     this.options = options
+    this.userInfoKey = 'user'
   }
 
   getPrefix (): string {
@@ -20,9 +22,18 @@ export class Storage {
     return this.options.prefix
   }
 
+  setUserInfo (user:any) {
+    let _userValue = user
+    if (typeof user !== 'string') {
+      _userValue = JSON.stringify(user)
+    }
+
+    this.setLocalStorage(this.userInfoKey, _userValue)
+  }
+
   getUserInfo (): any {
     if (this.isLocalStorageEnabled()) {
-      const _user = this.getLocalStorage('user')
+      const _user = this.getLocalStorage(this.userInfoKey)
       try {
         return JSON.parse(_user)
       } catch (err) {
@@ -30,6 +41,12 @@ export class Storage {
       }
     } else {
       return undefined
+    }
+  }
+
+  removeUserInfo (): void {
+    if (this.isLocalStorageEnabled()) {
+      this.removeLocalStorage(this.userInfoKey)
     }
   }
 

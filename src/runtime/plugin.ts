@@ -51,7 +51,7 @@ class Oidc {
 
     this.useStateLocal.value.user = user
     this.useStateLocal.value.isLoggedIn = Object.keys(user).length > 0
-    this.$storage.setLocalStorage('user', JSON.stringify(user))
+    this.$storage.setUserInfo(user)
   }
 
   async fetchUser () {
@@ -79,6 +79,7 @@ class Oidc {
 
   logout () {
     if (process.client) {
+      this.$storage.removeUserInfo()
       window.location.replace('/oidc/logout')
     }
   }
