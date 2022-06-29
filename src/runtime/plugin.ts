@@ -81,6 +81,7 @@ class Oidc {
   }
 
   logout () {
+    // TODO clear user info when accessToken expired.
     if (process.client) {
       this.$useState.value.user = {}
       this.$useState.value.isLoggedIn = false

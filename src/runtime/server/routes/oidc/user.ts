@@ -32,7 +32,15 @@ export default defineEventHandler(async (event) => {
       return userinfo
     } catch (err) {
       console.log(err)
+      deleteCookie(event, session.secret)
       deleteCookie(event, session.cookiePrefix + 'access_token')
+      deleteCookie(event, session.cookiePrefix + 'user_info')
+      const cookie = session.cookie
+      if (cookie) {
+        for (const [key, value] of Object.entries(cookie)) {
+          deleteCookie(event, session.cookiePrefix + key)
+        }
+      }
       return {}
     }
   } else {
