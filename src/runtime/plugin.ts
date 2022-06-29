@@ -26,14 +26,14 @@ class Oidc {
   }
 
   get user () {
-    const userState = this.useStateLocal.value.user
+    const userInfoState = this.useStateLocal.value.user
     const userInfoLS = this.$storage.getUserInfo()
-    if ((isUnset(userState) || Object.keys(useState).length === 0)) {
+    if ((isUnset(userInfoState) || Object.keys(userInfoState).length === 0)) {
       // console.log('load user from Browser.localStorge', user)
       return userInfoLS
     } else {
-      // console.log('load user from Vue.useState', userState)
-      return userState
+      // console.log('load user from Vue.useState', userInfoState)
+      return userInfoState
     }
     // return this.state.user  // not auto update
   }
@@ -79,6 +79,7 @@ class Oidc {
 
   logout () {
     if (process.client) {
+      // todo remove cookie info
       this.$storage.removeUserInfo()
       window.location.replace('/oidc/logout')
     }
