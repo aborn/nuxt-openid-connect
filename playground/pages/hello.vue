@@ -2,7 +2,6 @@
   <div>
     Nuxt module playground!
     <p>
-      user:
       {{ $oidc.user }}
     </p>
   </div>

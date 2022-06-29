@@ -20,6 +20,23 @@ export class Storage {
     return this.options.prefix
   }
 
+  getUserInfo (): any {
+    if (this.isLocalStorageEnabled()) {
+      const _user = this.getLocalStorage('user')
+      try {
+        return JSON.parse(_user)
+      } catch (err) {
+        console.error('error in parse local user', err)
+      }
+    } else {
+      return undefined
+    }
+  }
+
+  isLoggedIn (): boolean {
+    return isSet(this.getUserInfo())
+  }
+
   setLocalStorage (key: string, value: string): string | void {
     // Unset null, undefined
     if (isUnset(value)) {

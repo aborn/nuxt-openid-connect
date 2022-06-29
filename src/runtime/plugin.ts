@@ -27,11 +27,10 @@ class Oidc {
 
   get user () {
     const userState = this.useStateLocal.value.user
-    if ((isUnset(userState) || Object.keys(useState).length === 0) && this.$storage.isLocalStorageEnabled()) {
-      const _user = this.$storage.getLocalStorage('user')
-      const user = JSON.parse(_user)
+    const userInfoLS = this.$storage.getUserInfo()
+    if ((isUnset(userState) || Object.keys(useState).length === 0)) {
       // console.log('load user from Browser.localStorge', user)
-      return user
+      return userInfoLS
     } else {
       // console.log('load user from Vue.useState', userState)
       return userState
@@ -41,8 +40,9 @@ class Oidc {
 
   get isLoggedIn () {
     const isLoggedIn = this.useStateLocal.value.isLoggedIn
+    const isLoggedInLS = this.$storage.isLoggedIn()
     // return this.state.isLoggedIn  // not auto update
-    return isLoggedIn
+    return isLoggedIn || isLoggedInLS
   }
 
   setUser (user: any) {
