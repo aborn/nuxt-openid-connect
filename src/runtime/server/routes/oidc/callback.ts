@@ -29,6 +29,8 @@ export default defineEventHandler(async (event) => {
       setCookie(event, session.cookiePrefix + 'access_token', params.access_token, {
         maxAge: session.maxAge // one day
       })
+
+      // add part of userinfo (depends on user's setting.) to cookies.
       const cookie = session.cookie
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
@@ -37,7 +39,8 @@ export default defineEventHandler(async (event) => {
           })
         }
       }
-      // use info cookie setting.
+
+      // add encrypted userinfo to cookies.
       const encryptedText = await encrypt(JSON.stringify(userinfo))
       setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
     } catch (err) {

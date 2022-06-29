@@ -1,6 +1,10 @@
 <template>
   <div>
     Nuxt module playground!
+    <p>
+      user:
+      {{ $oidc.user }}
+    </p>
   </div>
 </template>
 
@@ -27,8 +31,8 @@ export default {
   },
   mounted () {
     console.log('mounted...')
-    //const { $oidc } = useNuxtApp()
-    //console.log($oidc.state.user)
+    const { $oidc } = useNuxtApp()
+    console.log($oidc.user)
   }
 }
 </script>

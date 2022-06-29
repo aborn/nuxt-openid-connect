@@ -15,16 +15,20 @@ export default defineEventHandler(async (event) => {
 
   if (userinfoCookie) {
     const userInfoStr = await decrypt(userinfoCookie)
-    console.log('load user info from cookie')
-    console.log(userInfoStr)
+    // console.log('load user info from cookie', userInfoStr)
     return JSON.parse(userInfoStr)
   } else if (accesstoken) {
     try {
+      // load user info from oidc server.
       const userinfo = await issueClient.userinfo(accesstoken)
 
-      // use info cookie setting.
-      const encryptedText = await encrypt(JSON.stringify(userinfo))
-      setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
+      // add encrypted userinfo to cookies.
+      try {
+        const encryptedText = await encrypt(JSON.stringify(userinfo))
+        setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
+      } catch (err) {
+        console.error('encrypted userinfo error.', err)
+      }
       return userinfo
     } catch (err) {
       console.log(err)
