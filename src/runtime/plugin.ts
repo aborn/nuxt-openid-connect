@@ -7,14 +7,17 @@ interface UseState {
   user: any,
   isLoggedIn: boolean
 }
+
 class Oidc {
-  private state: UseState
-  private useStateLocal: any
-  public $storage: Storage
+  private state: UseState // only this plugin.
+  private $useState: any // Nuxt.useState (share state in all nuxt pages and components) https://v3.nuxtjs.org/guide/features/state-management
+  public $storage: Storage // Browser.localStorage （share state in all sites, use in page refresh.）
 
   constructor () {
-    // this.state = { user: {}, isLoggedIn: false }
-    this.useStateLocal = useState<UseState>('useState', () => { return { user: {}, isLoggedIn: false } })
+    this.state = { user: {}, isLoggedIn: false }
+
+    this.$useState = useState<UseState>('useState', () => { return { user: {}, isLoggedIn: false } })
+
     const storageOption = {
       localStorage: true,
       prefix: 'oidc.',
@@ -22,26 +25,24 @@ class Oidc {
     }
     const storage = new Storage(storageOption)
     this.$storage = storage
-    this.state = { user: {}, isLoggedIn: false }
   }
 
   get user () {
-    const userInfoState = this.useStateLocal.value.user
+    const userInfoState = this.$useState.value.user
     const userInfoLS = this.$storage.getUserInfo()
     if ((isUnset(userInfoState) || Object.keys(userInfoState).length === 0)) {
       // console.log('load user from Browser.localStorge', user)
       return userInfoLS
     } else {
-      // console.log('load user from Vue.useState', userInfoState)
+      // console.log('load user from Nuxt.useState', userInfoState)
       return userInfoState
     }
     // return this.state.user  // not auto update
   }
 
   get isLoggedIn () {
-    const isLoggedIn = this.useStateLocal.value.isLoggedIn
+    const isLoggedIn = this.$useState.value.isLoggedIn
     const isLoggedInLS = this.$storage.isLoggedIn()
-    // return this.state.isLoggedIn  // not auto update
     return isLoggedIn || isLoggedInLS
   }
 
@@ -49,8 +50,9 @@ class Oidc {
     this.state.user = user
     this.state.isLoggedIn = Object.keys(user).length > 0
 
-    this.useStateLocal.value.user = user
-    this.useStateLocal.value.isLoggedIn = Object.keys(user).length > 0
+    this.$useState.value.user = user
+    this.$useState.value.isLoggedIn = Object.keys(user).length > 0
+
     this.$storage.setUserInfo(user)
   }
 
@@ -72,7 +74,7 @@ class Oidc {
     if (process.client) {
       const params = new URLSearchParams({ redirect })
       const toStr = '/oidc/login' // + params.toString()
-      console.log(toStr)
+      // console.log(toStr)
       window.location.replace(toStr)
     }
   }
@@ -80,6 +82,9 @@ class Oidc {
   logout () {
     if (process.client) {
       // todo remove cookie info
+      this.$useState.value.user = {}
+      this.$useState.value.isLoggedIn = false
+
       this.$storage.removeUserInfo()
       window.location.replace('/oidc/logout')
     }

@@ -23,6 +23,10 @@ export class Storage {
   }
 
   setUserInfo (user:any) {
+    if (isUnset(user) || Object.keys(user).length === 0) {
+      return
+    }
+
     let _userValue = user
     if (typeof user !== 'string') {
       _userValue = JSON.stringify(user)
@@ -51,7 +55,8 @@ export class Storage {
   }
 
   isLoggedIn (): boolean {
-    return isSet(this.getUserInfo())
+    const user = this.getUserInfo()
+    return isSet(user) && Object.keys(user).length > 0
   }
 
   setLocalStorage (key: string, value: string): string | void {
