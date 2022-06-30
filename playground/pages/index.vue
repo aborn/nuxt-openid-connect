@@ -17,6 +17,7 @@
 <script setup>
 // alternatively, you can also use it here
 const { $oidc } = useNuxtApp()
+console.log('here is 20 line..')
 console.log('isLogIn:', $oidc.isLoggedIn)
 // const user = useState('useState')
 </script>

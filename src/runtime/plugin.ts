@@ -1,7 +1,8 @@
 import { defineNuxtPlugin } from '#app'
 import { Storage, StorageOptions } from './storage'
 import { isUnset, isSet } from './utils/utils'
-import { useState, useFetch } from '#imports'
+import { encrypt, decrypt } from './utils/encrypt'
+import { useState, useFetch, useRuntimeConfig } from '#imports'
 
 interface UseState {
   user: any,
@@ -58,13 +59,23 @@ class Oidc {
 
   async fetchUser () {
     try {
-      const { data, pending, refresh, error } = await useFetch('/oidc/user')
-      // console.log(data.value)
-      // TODO use browser cookie to get encrypt userInfo.
-      this.setUser(data.value)
-      if (error && error.value) {
-        console.error('tinyOidc failed to fetch user data: ', error.value)
-        this.setUser({})
+      if (process.server) {
+        const { session } = useRuntimeConfig().openidConnect
+        const userinfoCookie = useCookie(session.cookiePrefix + 'user_info')
+        const userInfoStr = await decrypt(userinfoCookie.value)
+        const userinfo = JSON.parse(userInfoStr)
+        this.setUser(userinfo)
+        // console.log('fetchUser from cookie directly.', userinfo)
+      } else {
+        // console.log('fetchUser from server-api call.')
+        const { data, pending, refresh, error } = await useFetch('/oidc/user')
+        // console.log(data.value)
+        // TODO use browser cookie to get encrypt userInfo.
+        this.setUser(data.value)
+        if (error && error.value) {
+          console.error('tinyOidc failed to fetch user data: ', error.value)
+          this.setUser({})
+        }
       }
     } catch (err) {
       console.log('error')
@@ -96,8 +107,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   console.log('Plugin by nuxt-openid-connect!')
   const oidc = new Oidc()
   nuxtApp.provide('oidc', oidc)
-
-  if (process.client) {
-    oidc.fetchUser()
-  }
+  oidc.fetchUser() // preload both from server and client.
 })
