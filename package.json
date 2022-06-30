@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.3",
+    "buffer": "^6.0.3",
     "defu": "^6.0.0",
     "openid-client": "^5.1.6",
     "uuid": "^8.3.2"

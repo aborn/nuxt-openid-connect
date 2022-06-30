@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 const algorithm = 'aes-256-ctr'
 const ENCRYPTION_KEY = Buffer.from('bf3c199c2470cb477d907b1e0917c17b1234567890e=', 'base64')
 const IV_LENGTH = 16
