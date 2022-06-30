@@ -3,8 +3,8 @@
     <div>
       Nuxt OpenID-Connect playground!
     </div>
-    <p>isLoggedIn: {{ $oidc.isLoggedIn }}</p>
-    <p>user: {{ $oidc.user }}</p>
+    <div>isLoggedIn: {{ $oidc.isLoggedIn }}</div>
+    <div>user: {{ $oidc.user }}</div>
     <button v-if="!$oidc.isLoggedIn" @click="$oidc.login()">
       Login
     </button>

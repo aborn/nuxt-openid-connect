@@ -1,19 +1,26 @@
 <template>
   <div>
     Nuxt module playground!
-    <p>
+    <div>
       {{ $oidc.user }}
-    </p>
+    </div>
   </div>
 </template>
 
 <script setup>
 const { $oidc } = useNuxtApp()
 
-if (process.client) {
-  const user = $oidc.user
-  console.log(user)
-}
+const user = $oidc.user
+console.log(user)
+
+const url = 'http://localhost:18080/api/mindpress/demo'
+
+const { data: dataServer } = await useFetch(url,
+  {
+    key: 't' + new Date(),
+    headers: { uid: 'aborn' }
+  })
+console.log(dataServer.value)
 
 </script>
 
