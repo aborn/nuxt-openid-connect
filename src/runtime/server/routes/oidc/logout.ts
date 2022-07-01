@@ -6,16 +6,16 @@ export default defineEventHandler((event) => {
   const res = event.res
   console.log('oidc/logout calling')
 
-  const { session } = useRuntimeConfig().openidConnect
-  deleteCookie(event, session.secret)
-  deleteCookie(event, session.cookiePrefix + 'access_token')
-  deleteCookie(event, session.cookiePrefix + 'user_info')
+  const { config } = useRuntimeConfig().openidConnect
+  deleteCookie(event, config.secret)
+  deleteCookie(event, config.cookiePrefix + 'access_token')
+  deleteCookie(event, config.cookiePrefix + 'user_info')
 
   // delete part of cookie userinfo (depends on user's setting.).
-  const cookie = session.cookie
+  const cookie = config.cookie
   if (cookie) {
     for (const [key, value] of Object.entries(cookie)) {
-      deleteCookie(event, session.cookiePrefix + key)
+      deleteCookie(event, config.cookiePrefix + key)
     }
   }
 

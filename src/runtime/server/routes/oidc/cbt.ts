@@ -4,11 +4,11 @@ import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {
   console.log('oidc/cbt calling')
-  const { session } = useRuntimeConfig().openidConnect
+  const { config } = useRuntimeConfig().openidConnect
   const res = event.res
   const html = CBT_PAGE_TEMPATE
 
-  const sessionkey = session.secret
+  const sessionkey = config.secret
   const sessionid = useCookie(event, sessionkey)
   // console.log(sessionid)
   /* setCookie(event, sessionkey, sessionid, {

@@ -4,14 +4,14 @@ import { encrypt, decrypt } from '../../../utils/encrypt'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
-  const { session, op } = useRuntimeConfig().openidConnect
+  const { config, op } = useRuntimeConfig().openidConnect
   const issueClient = await initClient(op)
   console.log('oidc/user calling')
   // console.log(req.headers.cookie)
 
-  const sessionid = useCookie(event, session.secret)
-  const accesstoken = useCookie(event, session.cookiePrefix + 'access_token')
-  const userinfoCookie = useCookie(event, session.cookiePrefix + 'user_info')
+  const sessionid = useCookie(event, config.secret)
+  const accesstoken = useCookie(event, config.cookiePrefix + 'access_token')
+  const userinfoCookie = useCookie(event, config.cookiePrefix + 'user_info')
 
   if (userinfoCookie) {
     const userInfoStr = await decrypt(userinfoCookie)
@@ -24,20 +24,20 @@ export default defineEventHandler(async (event) => {
       // add encrypted userinfo to cookies.
       try {
         const encryptedText = await encrypt(JSON.stringify(userinfo))
-        setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
+        setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
       } catch (err) {
         console.error('encrypted userinfo error.', err)
       }
       return userinfo
     } catch (err) {
       console.log(err)
-      deleteCookie(event, session.secret)
-      deleteCookie(event, session.cookiePrefix + 'access_token')
-      deleteCookie(event, session.cookiePrefix + 'user_info')
-      const cookie = session.cookie
+      deleteCookie(event, config.secret)
+      deleteCookie(event, config.cookiePrefix + 'access_token')
+      deleteCookie(event, config.cookiePrefix + 'user_info')
+      const cookie = config.cookie
       if (cookie) {
         for (const [key, value] of Object.entries(cookie)) {
-          deleteCookie(event, session.cookiePrefix + key)
+          deleteCookie(event, config.cookiePrefix + key)
         }
       }
       return {}

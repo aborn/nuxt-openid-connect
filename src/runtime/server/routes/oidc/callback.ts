@@ -6,9 +6,9 @@ import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   console.log('oidc/callback calling')
-  const { op, session } = useRuntimeConfig().openidConnect
+  const { op, config } = useRuntimeConfig().openidConnect
   const issueClient = await initClient(op)
-  const sessionid = useCookie(event, session.secret)
+  const sessionid = useCookie(event, config.secret)
   // console.log(sessionid)
 
   const req = event.req
@@ -26,23 +26,23 @@ export default defineEventHandler(async (event) => {
   if (params.access_token) {
     try {
       const userinfo = await issueClient.userinfo(params.access_token)
-      setCookie(event, session.cookiePrefix + 'access_token', params.access_token, {
-        maxAge: session.maxAge // one day
+      setCookie(event, config.cookiePrefix + 'access_token', params.access_token, {
+        maxAge: config.maxAge // one day
       })
 
       // add part of userinfo (depends on user's setting.) to cookies.
-      const cookie = session.cookie
+      const cookie = config.cookie
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
-          setCookie(event, session.cookiePrefix + key, JSON.stringify(value), {
-            maxAge: session.maxAge // one day
+          setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
+            maxAge: config.maxAge // one day
           })
         }
       }
 
       // add encrypted userinfo to cookies.
       const encryptedText = await encrypt(JSON.stringify(userinfo))
-      setCookie(event, session.cookiePrefix + 'user_info', encryptedText)
+      setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
     } catch (err) {
       console.log(err)
     }

@@ -11,17 +11,21 @@ export type OidcProvider = {
   scope: Array<string>
 }
 
-export type ConfigSession = {
+export type Config = {
   secret: string,
   cookie: {},
   cookiePrefix: string,
-  maxAge: number
+  cookieEncrypt: boolean,
+  cookieEncryptKey: string,
+  cookieEncryptIV: string,
+  cookieEncryptALGO: string,
+  cookieMaxAge: number
 }
 
 export interface ModuleOptions {
   addPlugin: boolean,
   op: OidcProvider,
-  session: ConfigSession
+  config: Config
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -48,11 +52,15 @@ export default defineNuxtModule<ModuleOptions>({
       ]
     },
     // express-session configuration
-    session: {
+    config: {
       secret: 'oidc._sessionid', // process.env.OIDC_SESSION_SECRET
       cookie: {},
-      cookiePrefix: '',
-      maxAge: 24 * 60 * 60 // one day
+      cookiePrefix: 'oidc._',
+      cookieEncrypt: true,
+      cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc',
+      cookieEncryptIV: 'ab83667c72eec9e4',
+      cookieEncryptALGO: 'aes-256-cbc',
+      cookieMaxAge: 24 * 60 * 60 //  default one day
     }
   },
   setup (options, nuxt) {
@@ -100,6 +108,11 @@ export default defineNuxtModule<ModuleOptions>({
           resolve('./runtime')
         ]
       })
+    })
+
+    nuxt.options.runtimeConfig.public.openidConnect = defu(nuxt.options.runtimeConfig.public.openidConnect, {
+      op: options.op,
+      config: options.config
     })
 
     // openidConnect config will use in server

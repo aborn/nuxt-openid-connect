@@ -6,14 +6,14 @@ import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   console.log('oidc/login calling')
-  const { op, session } = useRuntimeConfig().openidConnect
+  const { op, config } = useRuntimeConfig().openidConnect
   const issueClient = await initClient(op)
 
   const req = event.req
   const res = event.res
 
-  const sessionkey = session.secret
-  let sessionid = useCookie(event, session.secret)
+  const sessionkey = config.secret
+  let sessionid = useCookie(event, config.secret)
   if (!sessionid) {
     // console.log('regenerate sessionid')
     sessionid = uuidv4()
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
   console.log(sessionid)
   setCookie(event, sessionkey, sessionid, {
-    maxAge: session.maxAge
+    maxAge: config.cookieMaxAge
   })
 
   res.writeHead(302, { Location: authUrl })
