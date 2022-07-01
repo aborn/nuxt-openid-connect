@@ -65,7 +65,7 @@ class Oidc {
         const userInfoStr = await decrypt(userinfoCookie.value)
         const userinfo = JSON.parse(userInfoStr)
         this.setUser(userinfo)
-        console.log('fetchUser from cookie directly.', userinfo)
+        console.log('fetchUser from cookie directly.')
       } else {
         const { data, pending, refresh, error } = await useFetch('/oidc/user')
         this.setUser(data.value)
