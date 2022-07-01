@@ -1,23 +1,21 @@
-const algorithm = 'aes-256-ctr'
-const ENCRYPTION_KEY = Buffer.from('bf3c199c2470cb477d907b1e0917c17b1234567890e=', 'base64')
-const IV_LENGTH = 16
+const KEY = 'bfnuxt9c2470cb477d907b1e0917oidc' // 32
+const IV = 'ab83667c72eec9e4' // 16
+const ALGO = 'aes-256-cbc'
 
+// TODO KEY and IV can config.
 export const encrypt = async (text: string) => {
   const crypto = await import('node:crypto')
-  const iv = crypto.randomBytes(IV_LENGTH)
-  const cipher = crypto.createCipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv)
-  let encrypted = cipher.update(text)
-  encrypted = Buffer.concat([encrypted, cipher.final()])
-  return iv.toString('hex') + ':' + encrypted.toString('hex')
+  const cipher = crypto.createCipheriv(ALGO, KEY, IV)
+  let encrypted = cipher.update(text, 'utf8', 'base64')
+  encrypted += cipher.final('base64')
+  return encrypted
 }
 
 export const decrypt = async (text: string) => {
+  if (!text) { return }
   const crypto = await import('node:crypto')
-  const textParts = text.split(':')
-  const iv = Buffer.from(textParts.shift(), 'hex')
-  const encryptedText = Buffer.from(textParts.join(':'), 'hex')
-  const decipher = crypto.createDecipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv)
-  let decrypted = decipher.update(encryptedText)
-  decrypted = Buffer.concat([decrypted, decipher.final()])
-  return decrypted.toString()
+
+  const decipher = crypto.createDecipheriv(ALGO, KEY, IV)
+  const decrypted = decipher.update(text, 'base64', 'utf8')
+  return (decrypted + decipher.final('utf8'))
 }

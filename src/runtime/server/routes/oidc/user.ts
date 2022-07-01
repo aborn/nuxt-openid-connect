@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
   if (userinfoCookie) {
     const userInfoStr = await decrypt(userinfoCookie)
-    // console.log('load user info from cookie', userInfoStr)
     return JSON.parse(userInfoStr)
   } else if (accesstoken) {
     try {

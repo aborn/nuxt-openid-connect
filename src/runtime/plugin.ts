@@ -59,14 +59,13 @@ class Oidc {
 
   async fetchUser () {
     try {
-      const { session } = useRuntimeConfig().openidConnect
-      const userinfoCookie = useCookie(session.cookiePrefix + 'user_info')
-      const userInfoStr = await decrypt(userinfoCookie.value)
-      const userinfo = JSON.parse(userInfoStr)
-
-      if (isSet(userinfo) && Object.keys(userinfo).length > 0) {
+      // const { session } = useRuntimeConfig().openidConnect
+      const userinfoCookie = useCookie('oidc._' + 'user_info')
+      if (isSet(userinfoCookie) && process.server) {
+        const userInfoStr = await decrypt(userinfoCookie.value)
+        const userinfo = JSON.parse(userInfoStr)
         this.setUser(userinfo)
-        // console.log('fetchUser from cookie directly.', userinfo)
+        console.log('fetchUser from cookie directly.', userinfo)
       } else {
         const { data, pending, refresh, error } = await useFetch('/oidc/user')
         this.setUser(data.value)
