@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       }
 
       // add encrypted userinfo to cookies.
-      const encryptedText = await encrypt(JSON.stringify(userinfo))
+      const encryptedText = await encrypt(JSON.stringify(userinfo), config)
       setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
     } catch (err) {
       console.log(err)
