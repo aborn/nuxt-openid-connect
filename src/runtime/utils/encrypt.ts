@@ -1,9 +1,13 @@
-const KEY = 'bfnuxt9c2470cb477d907b1e0917oidc' // 32
-const IV = 'ab83667c72eec9e4' // 16
-const ALGO = 'aes-256-cbc'
+import { Config } from '../../module'
 
-// TODO KEY and IV can config.
-export const encrypt = async (text: string) => {
+export const encrypt = async (text: string, config: Config) => {
+  const KEY = config.cookieEncryptKey
+  const IV = config.cookieEncryptIV
+  const ALGO = config.cookieEncryptALGO
+  const NEED_ENCRYPT = config.cookieEncrypt
+
+  if (!NEED_ENCRYPT) { return text }
+
   const crypto = await import('node:crypto')
   const cipher = crypto.createCipheriv(ALGO, KEY, IV)
   let encrypted = cipher.update(text, 'utf8', 'base64')
@@ -11,8 +15,14 @@ export const encrypt = async (text: string) => {
   return encrypted
 }
 
-export const decrypt = async (text: string) => {
+export const decrypt = async (text: string, config: Config) => {
+  const KEY = config.cookieEncryptKey
+  const IV = config.cookieEncryptIV
+  const ALGO = config.cookieEncryptALGO
+  const NEED_ENCRYPT = config.cookieEncrypt
+
   if (!text) { return }
+  if (!NEED_ENCRYPT) { return text }
   const crypto = await import('node:crypto')
 
   const decipher = crypto.createDecipheriv(ALGO, KEY, IV)

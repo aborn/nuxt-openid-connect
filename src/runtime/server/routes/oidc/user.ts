@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
   const userinfoCookie = useCookie(event, config.cookiePrefix + 'user_info')
 
   if (userinfoCookie) {
-    const userInfoStr = await decrypt(userinfoCookie)
+    const userInfoStr = await decrypt(userinfoCookie, config)
     return JSON.parse(userInfoStr)
   } else if (accesstoken) {
     try {
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
       // add encrypted userinfo to cookies.
       try {
-        const encryptedText = await encrypt(JSON.stringify(userinfo))
+        const encryptedText = await encrypt(JSON.stringify(userinfo), config)
         setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
       } catch (err) {
         console.error('encrypted userinfo error.', err)
