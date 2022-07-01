@@ -60,7 +60,6 @@ class Oidc {
   async fetchUser () {
     try {
       const { config } = useRuntimeConfig()?.public?.openidConnect
-      console.log('222 prefix, ', config.cookiePrefix )
       const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
       if (isSet(userinfoCookie) && process.server) {
         const userInfoStr = await decrypt(userinfoCookie.value)

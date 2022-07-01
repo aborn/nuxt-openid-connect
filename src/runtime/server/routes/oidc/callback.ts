@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     try {
       const userinfo = await issueClient.userinfo(params.access_token)
       setCookie(event, config.cookiePrefix + 'access_token', params.access_token, {
-        maxAge: config.maxAge // one day
+        maxAge: config.cookieMaxAge // one day
       })
 
       // add part of userinfo (depends on user's setting.) to cookies.
