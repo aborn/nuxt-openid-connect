@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
           setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
-            maxAge: config.maxAge // one day
+            maxAge: config.cookieMaxAge // one day
           })
         }
       }
