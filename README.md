@@ -43,11 +43,15 @@ export default defineNuxtConfig({
         'address'
       ]
     },
-    session: {
-      cookie: {},
-      cookiePrefix: 'oidc._',
+    config: {
       secret: 'oidc._sessionid',
-      maxAge: 24 * 60 * 60       // one day
+      cookie: { loginName: '' },
+      cookiePrefix: 'oidc._',
+      cookieEncrypt: true,
+      cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc',
+      cookieEncryptIV: 'ab83667c72eec9e4',
+      cookieEncryptALGO: 'aes-256-cbc',
+      cookieMaxAge: 24 * 60 * 60 //  default one day
     }
   }
 })
