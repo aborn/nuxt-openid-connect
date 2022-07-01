@@ -9,7 +9,10 @@
     "nuxt 3.0",
     "auth"
   ],
-  "repository": "aborn/nuxt-openid-connect",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aborn/nuxt-openid-connect.git"
+  },
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -41,5 +44,10 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt": "^3.0.0-rc.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/aborn/nuxt-openid-connect/issues"
+  },
+  "homepage": "https://github.com/aborn/nuxt-openid-connect#readme",
+  "author": "aborn"
 }
