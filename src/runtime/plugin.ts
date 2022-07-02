@@ -60,18 +60,25 @@ class Oidc {
   async fetchUser () {
     try {
       const { config } = useRuntimeConfig()?.public?.openidConnect
-      const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
-      if (isSet(userinfoCookie) && process.server) {
-        const userInfoStr = await decrypt(userinfoCookie.value, config)
-        const userinfo = JSON.parse(userInfoStr)
-        this.setUser(userinfo)
-        console.log('fetchUser from cookie directly.')
+
+      if (process.server) {
+        console.log('serve-render:fetchUser from cookie.')
+        const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
+        if (isSet(userinfoCookie) && userinfoCookie.value) {
+          const userInfoStr = await decrypt(userinfoCookie.value, config)
+          const userinfo = JSON.parse(userInfoStr)
+          this.setUser(userinfo)
+        } else {
+          console.log('empty cookie')
+          this.setUser({})
+        }
       } else {
+        console.log('client-render:fetchUser from server.')
         const { data, pending, refresh, error } = await useFetch('/oidc/user')
         this.setUser(data.value)
-        console.log('fetchUser from server-api call.', data.value)
+        // console.log('fetchUser from server-api call.', data.value)
         if (error && error.value) {
-          console.error('tinyOidc failed to fetch user data: ', error.value)
+          console.error('failed to fetch user data: ', error.value)
           this.setUser({})
         }
       }

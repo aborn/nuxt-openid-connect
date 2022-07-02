@@ -5,7 +5,6 @@ import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const { config, op } = useRuntimeConfig().openidConnect
-  const issueClient = await initClient(op)
   console.log('oidc/user calling')
   // console.log(req.headers.cookie)
 
@@ -19,6 +18,7 @@ export default defineEventHandler(async (event) => {
   } else if (accesstoken) {
     try {
       // load user info from oidc server.
+      const issueClient = await initClient(op)
       const userinfo = await issueClient.userinfo(accesstoken)
 
       // add encrypted userinfo to cookies.

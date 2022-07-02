@@ -19,8 +19,11 @@ export default defineEventHandler(async (event) => {
     sessionid = uuidv4()
   }
 
+  const callbackUrl = 'http://' + req.headers.host + '/oidc/cbt'
+  console.log('cabackurl:', callbackUrl, op.callbackUrl)
+
   const parameters = {
-    redirect_uri: op.callbackUrl,
+    redirect_uri: callbackUrl,
     response_type: 'id_token',
     nonce: sessionid,
     scope: ['openid'].concat(op.scope).join(' ') // 'openid'
