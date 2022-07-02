@@ -110,6 +110,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
+    // config can be used in plugin.ts
     nuxt.options.runtimeConfig.public.openidConnect = defu(nuxt.options.runtimeConfig.public.openidConnect, {
       op: options.op,
       config: options.config

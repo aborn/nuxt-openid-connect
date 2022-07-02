@@ -1,4 +1,6 @@
 # Nuxt OpenID-Connect
+[![npm version](https://img.shields.io/npm/v/nuxt-openid-connect.svg?style=flat)](https://www.npmjs.com/package/nuxt-openid-connect)
+
 OpenID-Connect(OIDC) integration module for nuxt 3.0.
 
 ## Features
@@ -7,7 +9,7 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0.
 - OIDC integration ( implemetation base [openid-client](https://github.com/panva/node-openid-client) ).
 - [State Management](https://v3.nuxtjs.org/guide/features/state-management/), shared login user info.
 - OIDC provider config.
-- Encrypt userInfo cookie (V0.2+).
+- Encrypt userInfo cookie.
 - Support browser localStorage store userInfo, which keep user auth info after page refresh. Similar like [this](https://stackoverflow.com/questions/68174642/how-to-keep-user-authenticated-after-refreshing-the-page-in-nuxtjs).
 
 ## Why use this module 
