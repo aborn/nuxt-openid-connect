@@ -31,7 +31,7 @@ class Oidc {
   get user () {
     const userInfoState = this.$useState.value.user
     const userInfoLS = this.$storage.getUserInfo()
-    if ((isUnset(userInfoState) || Object.keys(userInfoState).length === 0)) {
+    if ((isUnset(userInfoState))) {
       // console.log('load user from Browser.localStorge', user)
       return userInfoLS
     } else {
@@ -44,6 +44,7 @@ class Oidc {
   get isLoggedIn () {
     const isLoggedIn = this.$useState.value.isLoggedIn
     const isLoggedInLS = this.$storage.isLoggedIn()
+    // console.log('isLoggedIn', isLoggedIn, isLoggedInLS)
     return isLoggedIn || isLoggedInLS
   }
 
@@ -83,7 +84,7 @@ class Oidc {
         }
       }
     } catch (err) {
-      console.error('error', err)
+      console.error('@plugin.fetchUser error', err)
     }
   }
 

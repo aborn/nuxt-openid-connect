@@ -23,7 +23,7 @@ export class Storage {
   }
 
   setUserInfo (user:any) {
-    if (isUnset(user) || Object.keys(user).length === 0) {
+    if (isUnset(user)) {
       return
     }
 

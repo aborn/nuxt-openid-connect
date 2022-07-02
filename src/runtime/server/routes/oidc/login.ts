@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const callbackUrl = 'http://' + req.headers.host + '/oidc/cbt'
-  console.log('cabackurl:', callbackUrl, op.callbackUrl)
+  // console.log('cabackurl:', callbackUrl, op.callbackUrl)
 
   const parameters = {
     redirect_uri: callbackUrl,
