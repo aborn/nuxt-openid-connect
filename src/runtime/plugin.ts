@@ -32,7 +32,7 @@ class Oidc {
     const userInfoState = this.$useState.value.user
     const userInfoLS = this.$storage.getUserInfo()
     if ((isUnset(userInfoState))) {
-      // console.log('load user from Browser.localStorge', user)
+      // console.log('load user from Browser.localStorge', userInfoState)
       return userInfoLS
     } else {
       // console.log('load user from Nuxt.useState', userInfoState)
@@ -60,10 +60,9 @@ class Oidc {
 
   async fetchUser () {
     try {
-      const { config } = useRuntimeConfig()?.public?.openidConnect
-
       if (process.server) {
         console.log('serve-render:fetchUser from cookie.')
+        const { config } = useRuntimeConfig()?.public?.openidConnect
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
         if (isSet(userinfoCookie) && userinfoCookie.value) {
           const userInfoStr = await decrypt(userinfoCookie.value, config)
