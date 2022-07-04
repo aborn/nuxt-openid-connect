@@ -44,7 +44,7 @@ export default defineNuxtModule<ModuleOptions>({
       issuer: '',
       clientId: '',
       clientSecret: '',
-      callbackUrl: 'http://localhost:3000/oidc/cbt',
+      callbackUrl: 'http://localhost:3000/oidc/cbt', // @deprecated.
       scope: [
         'email',
         'profile',

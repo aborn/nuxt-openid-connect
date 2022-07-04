@@ -18,10 +18,11 @@ class Oidc {
     this.state = { user: {}, isLoggedIn: false }
 
     this.$useState = useState<UseState>('useState', () => { return { user: {}, isLoggedIn: false } })
+    const { config } = useRuntimeConfig()?.public?.openidConnect
 
     const storageOption = {
       localStorage: true,
-      prefix: 'oidc.',
+      prefix: config.cookiePrefix,
       ignoreExceptions: true
     }
     const storage = new Storage(storageOption)
@@ -61,7 +62,7 @@ class Oidc {
   async fetchUser () {
     try {
       if (process.server) {
-        console.log('serve-render:fetchUser from cookie.')
+        console.log('serve-render: fetchUser from cookie.')
         const { config } = useRuntimeConfig()?.public?.openidConnect
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
         if (isSet(userinfoCookie) && userinfoCookie.value) {
@@ -73,7 +74,8 @@ class Oidc {
           this.setUser({})
         }
       } else {
-        console.log('client-render:fetchUser from server.')
+        // this.$useState.value.user is set by server, and pass to client ? how achived it ?
+        console.log('client-render: fetchUser from server.')
         const { data, pending, refresh, error } = await useFetch('/oidc/user')
         this.setUser(data.value)
         // console.log('fetchUser from server-api call.', data.value)
@@ -109,8 +111,8 @@ class Oidc {
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
-  console.log('Plugin by nuxt-openid-connect!')
+  console.log('--- Nuxt plugin: nuxt-openid-connect!')
   const oidc = new Oidc()
   nuxtApp.provide('oidc', oidc)
-  oidc.fetchUser() // preload both from server and client.
+  oidc.fetchUser() // render both from server and client.
 })
