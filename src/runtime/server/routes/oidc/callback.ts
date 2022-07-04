@@ -7,13 +7,13 @@ import { useRuntimeConfig } from '#imports'
 export default defineEventHandler(async (event) => {
   console.log('oidc/callback calling')
   const { op, config } = useRuntimeConfig().openidConnect
-  const issueClient = await initClient(op)
   const sessionid = useCookie(event, config.secret)
   // console.log(sessionid)
 
   const req = event.req
   const res = event.res
   // console.log(event.context.params)
+  const issueClient = await initClient(op, req)
   const params = issueClient.callbackParams(req)
 
   // TODO id_token check

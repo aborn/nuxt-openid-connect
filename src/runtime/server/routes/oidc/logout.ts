@@ -1,5 +1,4 @@
 import { useCookie, deleteCookie, defineEventHandler } from 'h3'
-import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {

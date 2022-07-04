@@ -7,11 +7,10 @@ import { useRuntimeConfig } from '#imports'
 export default defineEventHandler(async (event) => {
   console.log('oidc/login calling')
   const { op, config } = useRuntimeConfig().openidConnect
-  const issueClient = await initClient(op)
 
   const req = event.req
   const res = event.res
-
+  const issueClient = await initClient(op, req)
   const sessionkey = config.secret
   let sessionid = useCookie(event, config.secret)
   if (!sessionid) {
