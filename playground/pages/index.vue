@@ -29,7 +29,7 @@
 <script setup>
 // alternatively, you can also use it here
 // import { version } from '../../package.json'
-const version = '0.2.5'
+const version = '0.3.0'
 const { $oidc } = useNuxtApp()
 console.log('here is 20 line..')
 console.log('isLogIn:', $oidc.isLoggedIn)
