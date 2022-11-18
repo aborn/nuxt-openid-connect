@@ -5,7 +5,7 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0. (V0.4.0+ support nuxt 3.0.
 
 ## Features
 
-- An [**Nuxt 3**](https://v3.nuxtjs.org) module.
+- An [**Nuxt 3**](https://v3.nuxtjs.org) module (Note: nuxt 2.x not supported).
 - OIDC integration ( implemetation based on [openid-client](https://github.com/panva/node-openid-client) ).
 - [State Management](https://v3.nuxtjs.org/guide/features/state-management/), shared login user info.
 - OIDC provider config.
@@ -24,7 +24,7 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0. (V0.4.0+ support nuxt 3.0.
 yarn add nuxt-openid-connect
 ```
 
-- Then, add nuxt-openid-connect to the modules section of nuxt.config.ts and modify config depend yours:
+- Then, add `nuxt-openid-connect` module to nuxt.config.ts and change to your configs (`openidConnect`):
 ```ts
 export default defineNuxtConfig({
   modules: [
@@ -34,7 +34,7 @@ export default defineNuxtConfig({
     addPlugin: true,
     op: {
       issuer: 'your_issuer_value',
-      clientId: 'clientid',
+      clientId: 'your_issuer_clientid',
       clientSecret: 'secret',
       callbackUrl: 'http://localhost:3000/oidc/cbt',   // optional
       scope: [
