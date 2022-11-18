@@ -6,7 +6,7 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0. (V0.4.0+ support nuxt 3.0.
 ## Features
 
 - An [**Nuxt 3**](https://v3.nuxtjs.org) module.
-- OIDC integration ( implemetation base [openid-client](https://github.com/panva/node-openid-client) ).
+- OIDC integration ( implemetation based on [openid-client](https://github.com/panva/node-openid-client) ).
 - [State Management](https://v3.nuxtjs.org/guide/features/state-management/), shared login user info.
 - OIDC provider config.
 - Encrypt userInfo cookie.
@@ -26,8 +26,6 @@ yarn add nuxt-openid-connect
 
 - Then, add nuxt-openid-connect to the modules section of nuxt.config.ts and modify config depend yours:
 ```ts
-import { defineNuxtConfig } from 'nuxt'
-
 export default defineNuxtConfig({
   modules: [
     'nuxt-openid-connect'
