@@ -1,7 +1,7 @@
 # Nuxt OpenID-Connect
 [![npm version](https://img.shields.io/npm/v/nuxt-openid-connect.svg?style=flat)](https://www.npmjs.com/package/nuxt-openid-connect)
 
-OpenID-Connect(OIDC) integration module for nuxt 3.0.
+OpenID-Connect(OIDC) integration module for nuxt 3.0. (V0.4.0+ support nuxt 3.0.0-stable.)
 
 ## Features
 
