@@ -1,4 +1,4 @@
-import { defineEventHandler, setCookie, useCookie } from 'h3'
+import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
 
 import { initClient } from '../../../utils/issueclient'
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const res = event.res
   const issueClient = await initClient(op, req)
   const sessionkey = config.secret
-  let sessionid = useCookie(event, config.secret)
+  let sessionid = getCookie(event, config.secret)
   if (!sessionid) {
     // console.log('regenerate sessionid')
     sessionid = uuidv4()

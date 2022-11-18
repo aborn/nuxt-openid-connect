@@ -1,4 +1,4 @@
-import { defineEventHandler, useCookie, setCookie } from 'h3'
+import { defineEventHandler, getCookie, setCookie } from 'h3'
 
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
@@ -7,7 +7,7 @@ import { useRuntimeConfig } from '#imports'
 export default defineEventHandler(async (event) => {
   console.log('oidc/callback calling')
   const { op, config } = useRuntimeConfig().openidConnect
-  const sessionid = useCookie(event, config.secret)
+  const sessionid = getCookie(event, config.secret)
   // console.log(sessionid)
 
   const req = event.req

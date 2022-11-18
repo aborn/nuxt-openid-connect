@@ -33,7 +33,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.11",
+    "@nuxt/kit": "^3.0.0",
     "defu": "^6.0.0",
     "openid-client": "^5.1.6",
     "uuid": "^8.3.2"
@@ -42,7 +42,7 @@
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
-    "nuxt": "^3.0.0-rc.11"
+    "nuxt": "^3.0.0"
   },
   "bugs": {
     "url": "https://github.com/aborn/nuxt-openid-connect/issues"

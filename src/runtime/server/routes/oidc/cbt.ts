@@ -1,4 +1,4 @@
-import { defineEventHandler, setCookie, useCookie } from 'h3'
+import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { CBT_PAGE_TEMPATE } from '../../../utils/template'
 import { useRuntimeConfig } from '#imports'
 
@@ -9,7 +9,7 @@ export default defineEventHandler((event) => {
   const html = CBT_PAGE_TEMPATE
 
   const sessionkey = config.secret
-  const sessionid = useCookie(event, sessionkey)
+  const sessionid = getCookie(event, sessionkey)
   // console.log(sessionid)
   /* setCookie(event, sessionkey, sessionid, {
     maxAge: 24 * 60 * 60 // oneday

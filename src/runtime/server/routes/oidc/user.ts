@@ -1,4 +1,4 @@
-import { useCookie, deleteCookie, defineEventHandler } from 'h3'
+import { getCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
 import { useRuntimeConfig } from '#imports'
@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
   console.log('oidc/user calling')
   // console.log(req.headers.cookie)
 
-  const sessionid = useCookie(event, config.secret)
-  const accesstoken = useCookie(event, config.cookiePrefix + 'access_token')
-  const userinfoCookie = useCookie(event, config.cookiePrefix + 'user_info')
+  const sessionid = getCookie(event, config.secret)
+  const accesstoken = getCookie(event, config.cookiePrefix + 'access_token')
+  const userinfoCookie = getCookie(event, config.cookiePrefix + 'user_info')
 
   if (userinfoCookie) {
     const userInfoStr = await decrypt(userinfoCookie, config)
