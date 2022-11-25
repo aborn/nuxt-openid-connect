@@ -1,4 +1,3 @@
-import { defineNuxtConfig } from 'nuxt'
 import openidConnect from '..'
 
 export default defineNuxtConfig({

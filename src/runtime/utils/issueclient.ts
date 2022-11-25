@@ -1,7 +1,7 @@
-import { Issuer } from 'openid-client'
-import { OidcProvider } from '../../module'
+import {Issuer} from 'openid-client'
+import {OidcProvider} from '../../module'
 
-export const initClient = async (op: OidcProvider, req: any) => {
+export const initClient = async (op: OidcProvider, req: any, response_types: string) => {
   const host = req?.headers?.host
   const callbackUrl = host ? 'http://' + host + '/oidc/cbt' : op.callbackUrl
 
@@ -11,7 +11,7 @@ export const initClient = async (op: OidcProvider, req: any) => {
     client_id: op.clientId,
     client_secret: op.clientSecret,
     redirect_uris: [callbackUrl],
-    response_types: ['id_token']
+    response_types: [response_types]
     // id_token_signed_response_alg (default "RS256")
   }) // => Client
 
