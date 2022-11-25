@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   } else if (accesstoken) {
     try {
       // load user info from oidc server.
-      const issueClient = await initClient(op, event.req, config.response_types)
+      const issueClient = await initClient(op, event.req)
       const userinfo = await issueClient.userinfo(accesstoken)
 
       // add encrypted userinfo to cookies.
