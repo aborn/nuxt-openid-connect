@@ -1,4 +1,3 @@
-import { defineNuxtConfig } from 'nuxt'
 import openidConnect from '..'
 
 export default defineNuxtConfig({
@@ -19,6 +18,7 @@ export default defineNuxtConfig({
       ]
     },
     config: {
+      response_types: 'token id_token',
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',

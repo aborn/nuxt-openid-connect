@@ -12,6 +12,7 @@ export type OidcProvider = {
 }
 
 export type Config = {
+  response_types: string,
   secret: string,
   cookie: {},
   cookiePrefix: string,
