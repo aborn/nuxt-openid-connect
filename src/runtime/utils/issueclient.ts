@@ -13,7 +13,7 @@ export const initClient = async (op: OidcProvider, req: any) => {
     client_id: op.clientId,
     client_secret: op.clientSecret,
     redirect_uris: [callbackUrl],
-    response_types: [...config.response_types.split(' ')]
+    response_type: config.response_type
     // id_token_signed_response_alg (default "RS256")
   }) // => Client
 

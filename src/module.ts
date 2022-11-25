@@ -12,7 +12,6 @@ export type OidcProvider = {
 }
 
 export type Config = {
-  response_types: string,
   secret: string,
   cookie: {},
   cookiePrefix: string,
@@ -20,7 +19,8 @@ export type Config = {
   cookieEncryptKey: string,
   cookieEncryptIV: string,
   cookieEncryptALGO: string,
-  cookieMaxAge: number
+  cookieMaxAge: number,
+  response_type: string
 }
 
 export interface ModuleOptions {
@@ -61,7 +61,8 @@ export default defineNuxtModule<ModuleOptions>({
       cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc',
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
-      cookieMaxAge: 24 * 60 * 60 //  default one day
+      cookieMaxAge: 24 * 60 * 60, //  default one day
+      response_type: 'token'
     }
   },
   setup (options, nuxt) {

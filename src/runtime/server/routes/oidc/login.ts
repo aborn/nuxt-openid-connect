@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   const parameters = {
     redirect_uri: callbackUrl,
-    response_type: config.response_types,
+    response_type: config.response_type,
     nonce: sessionid,
     scope: ['openid'].concat(op.scope).join(' ') // 'openid'
   }
