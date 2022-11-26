@@ -13,7 +13,7 @@
             Logout
           </button>
         </template>
-        <button v-else variant="success" to="/login">
+        <button v-else variant="success" @click="$oidc.login()">
           Login
         </button>
       </div>
@@ -28,8 +28,7 @@
 
 <script setup>
 // alternatively, you can also use it here
-// import { version } from '../../package.json'
-const version = '0.3.0'
+import { version } from '../../package.json'
 const { $oidc } = useNuxtApp()
 console.log('here is 20 line..')
 console.log('isLogIn:', $oidc.isLoggedIn)

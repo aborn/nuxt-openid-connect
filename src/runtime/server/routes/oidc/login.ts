@@ -31,9 +31,11 @@ export default defineEventHandler(async (event) => {
   // console.log(authUrl)
 
   console.log(sessionid)
-  setCookie(event, sessionkey, sessionid, {
-    maxAge: config.cookieMaxAge
-  })
+  if (sessionid) {
+    setCookie(event, sessionkey, sessionid, {
+      maxAge: config.cookieMaxAge
+    })
+  }
 
   res.writeHead(302, { Location: authUrl })
   res.end()
