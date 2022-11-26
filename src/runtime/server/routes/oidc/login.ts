@@ -1,12 +1,12 @@
-import {defineEventHandler, setCookie, getCookie} from 'h3'
-import {v4 as uuidv4} from 'uuid'
+import { defineEventHandler, setCookie, getCookie } from 'h3'
+import { v4 as uuidv4 } from 'uuid'
 
-import {initClient} from '../../../utils/issueclient'
-import {useRuntimeConfig} from '#imports'
+import { initClient } from '../../../utils/issueclient'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   console.log('oidc/login calling')
-  const {op, config} = useRuntimeConfig().openidConnect
+  const { op, config } = useRuntimeConfig().openidConnect
 
   const req = event.req
   const res = event.res
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     sessionid = uuidv4()
   }
 
-  const callbackUrl = (op.callbackUrl !== '') ? op.callbackUrl : 'http://' + req.headers.host + '/oidc/cbt'
+  const callbackUrl = (op.callbackUrl && op.callbackUrl.length > 0) ? op.callbackUrl : 'http://' + req.headers.host + '/oidc/cbt'
   // console.log('cabackurl:', callbackUrl, op.callbackUrl)
 
   const parameters = {
@@ -35,6 +35,6 @@ export default defineEventHandler(async (event) => {
     maxAge: config.cookieMaxAge
   })
 
-  res.writeHead(302, {Location: authUrl})
+  res.writeHead(302, { Location: authUrl })
   res.end()
 })

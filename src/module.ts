@@ -45,7 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
       issuer: '',
       clientId: '',
       clientSecret: '',
-      callbackUrl: 'http://localhost:3000/oidc/cbt', // @deprecated.
+      callbackUrl: '',
       scope: [
         'email',
         'profile',
@@ -62,7 +62,7 @@ export default defineNuxtModule<ModuleOptions>({
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
       cookieMaxAge: 24 * 60 * 60, //  default one day
-      response_type: 'token'
+      response_type: 'id_token'
     }
   },
   setup (options, nuxt) {

@@ -36,7 +36,7 @@ export default defineNuxtConfig({
       issuer: 'your_issuer_value',
       clientId: 'your_issuer_clientid',
       clientSecret: 'secret',
-      callbackUrl: 'http://localhost:3000/oidc/cbt',   // optional
+      callbackUrl: '',   // optional
       scope: [
         'email',
         'profile',

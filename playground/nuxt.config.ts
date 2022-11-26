@@ -1,6 +1,17 @@
 import openidConnect from '..'
 
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'OIDC',
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://unpkg.com/@picocss/pico@latest/css/pico.min.css'
+        }
+      ]
+    }
+  },
   modules: [
     openidConnect
   ],
@@ -10,7 +21,7 @@ export default defineNuxtConfig({
       issuer: 'your_issuer_value',
       clientId: 'clientid',
       clientSecret: 'secret',
-      callbackUrl: 'http://localhost:3000/oidc/cbt',
+      callbackUrl: '',
       scope: [
         'email',
         'profile',
