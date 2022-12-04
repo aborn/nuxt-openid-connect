@@ -1,55 +1,49 @@
-import { defineEventHandler, getCookie, setCookie } from 'h3'
-
-import { initClient } from '../../../utils/issueclient'
-import { encrypt, decrypt } from '../../../utils/encrypt'
-import { useRuntimeConfig } from '#imports'
-
+import { defineEventHandler, getCookie, setCookie } from "h3";
+import { initClient } from "../../../utils/issueclient.mjs";
+import { encrypt } from "../../../utils/encrypt.mjs";
+import { useRuntimeConfig } from "#imports";
 export default defineEventHandler(async (event) => {
-  console.log('oidc/callback calling')
-  const { op, config } = useRuntimeConfig().openidConnect
-  const sessionid = getCookie(event, config.secret)
-  // console.log(sessionid)
-
-  const req = event.req
-  const res = event.res
-  // console.log(event.context.params)
-  const issueClient = await initClient(op, req)
-  const params = issueClient.callbackParams(req)
-
-  // TODO id_token check
-  // const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
-  // const tokenSet = await issueClient.callback(callBackUrl, event.context.params, { nonce: sessionid })
-  // console.log('received and validated tokens %j', tokenSet)
-  // console.log('validated ID Token claims %j', tokenSet.claims())
-
-  // console.log(params)
+  console.log("oidc/callback calling");
+  const { op, config } = useRuntimeConfig().openidConnect;
+  const sessionid = getCookie(event, config.secret);
+  const req = event.req;
+  const res = event.res;
+  const issueClient = await initClient(op, req);
+  const params = issueClient.callbackParams(req);
+  const callBackUrl = op.callbackUrl.replace('cbt', 'callback');
+  
   if (params.access_token) {
-    try {
-      const userinfo = await issueClient.userinfo(params.access_token)
-      setCookie(event, config.cookiePrefix + 'access_token', params.access_token, {
-        maxAge: config.cookieMaxAge // one day
-      })
+    await getUserInfo(params.access_token);
+  }
+  else if (params.code) {
+    const tokenSet = await issueClient.callback(callBackUrl, params, { nonce: sessionid });
+    await getUserInfo(tokenSet.access_token);
+  }
+  else {
+    console.log("empty callback");
+  }
+  res.writeHead(302, { Location: "/" });
+  res.end();
 
-      // add part of userinfo (depends on user's setting.) to cookies.
-      const cookie = config.cookie
+  async function getUserInfo(access_token) {
+    try {
+      const userinfo = await issueClient.userinfo(access_token);
+      setCookie(event, config.cookiePrefix + "access_token", access_token, {
+        maxAge: config.cookieMaxAge
+      });
+      const cookie = config.cookie;
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
           setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
-            maxAge: config.cookieMaxAge // one day
-          })
+            maxAge: config.cookieMaxAge
+          });
         }
       }
-
-      // add encrypted userinfo to cookies.
-      const encryptedText = await encrypt(JSON.stringify(userinfo), config)
-      setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
+      const encryptedText = await encrypt(JSON.stringify(userinfo), config);
+      setCookie(event, config.cookiePrefix + "user_info", encryptedText);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-    // console.log(userinfo)
-  } else {
-    console.log('empty callback')
   }
-  res.writeHead(302, { Location: '/' })
-  res.end()
-})
+});
+
