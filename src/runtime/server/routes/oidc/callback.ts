@@ -7,8 +7,8 @@ export default defineEventHandler(async (event) => {
   console.log('oidc/callback calling')
   const { op, config } = useRuntimeConfig().openidConnect
   const sessionid = getCookie(event, config.secret)
-  const req = event.req
-  const res = event.res
+  const req = event.node.req
+  const res = event.node.res
   const issueClient = await initClient(op, req)
   const params = issueClient.callbackParams(req)
   const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
