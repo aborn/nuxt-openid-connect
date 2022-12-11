@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     redirect_uri: callbackUrl,
     response_type: config.response_type,
     nonce: sessionid,
-    scope: ['openid'].concat(op.scope).join(' ') // 'openid'
+    scope: op.scope.join(' ') // 'openid' will be added by default
   }
   const authUrl = issueClient.authorizationUrl(parameters)
   // console.log(authUrl)

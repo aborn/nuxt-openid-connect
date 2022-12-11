@@ -37,7 +37,6 @@ export default defineNuxtConfig({
       scope: [
         'email',
         'profile',
-        'address'
       ]
     },
     config: {
