@@ -44,7 +44,7 @@ export default defineNuxtConfig({
       ]
     },
     config: {
-      response_types: 'id_token',
+      response_types: 'id_token', // or 'code'
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',

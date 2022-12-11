@@ -1,6 +1,6 @@
-import openidConnect from '..'
 
-export default defineNuxtConfig({
+export default defineNuxtConfig( {
+
   app: {
     head: {
       title: 'OIDC',
@@ -13,8 +13,19 @@ export default defineNuxtConfig({
     }
   },
   modules: [
-    openidConnect
+    'nuxt-openid-connect'
   ],
+  runtimeConfig: {
+    openidConnect: {
+      op: {
+        issuer: '',
+        clientId: '',
+        clientSecret: '',
+        callbackUrl: '',
+      },
+    },
+  },
+
   openidConnect: {
     addPlugin: true,
     op: {
@@ -40,4 +51,4 @@ export default defineNuxtConfig({
       cookieMaxAge: 24 * 60 * 60 //  default one day
     }
   }
-})
+} )
