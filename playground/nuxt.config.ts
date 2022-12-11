@@ -1,6 +1,5 @@
 
-export default defineNuxtConfig( {
-
+export default defineNuxtConfig({
   app: {
     head: {
       title: 'OIDC',
@@ -12,9 +11,11 @@ export default defineNuxtConfig( {
       ]
     }
   },
+
   modules: [
     'nuxt-openid-connect'
   ],
+
   runtimeConfig: {
     openidConnect: {
       op: {
@@ -40,7 +41,7 @@ export default defineNuxtConfig( {
       ]
     },
     config: {
-      response_types: 'token id_token',
+      response_type: 'code',
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',
@@ -51,4 +52,4 @@ export default defineNuxtConfig( {
       cookieMaxAge: 24 * 60 * 60 //  default one day
     }
   }
-} )
+})
