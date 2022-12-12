@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
   console.log(sessionid)
   if (sessionid) {
     setCookie(event, sessionkey, sessionid, {
-      maxAge: config.cookieMaxAge
+      maxAge: config.cookieMaxAge,
+      ...config.cookieFlags[sessionkey as keyof typeof config.cookieFlags]
     })
   }
 

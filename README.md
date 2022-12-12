@@ -27,9 +27,32 @@ yarn add nuxt-openid-connect
 - Then, add `nuxt-openid-connect` module to nuxt.config.ts and change to your configs (`openidConnect`):
 ```ts
 export default defineNuxtConfig({
+  // runtime config for nuxt-openid-connect example -- you can use env variables see .env.example
+  runtimeConfig: {
+    openidConnect: {
+      op: {
+        issuer: '',
+        clientId: '',
+        clientSecret: '',
+        callbackUrl: '',
+      },
+      config: {
+        cookieFlags: {
+          access_token: {
+            httpOnly: true,
+            secure: false,
+          }
+        }
+      }
+    },
+  },
+  
+  // add nuxt-openid-connect module here... 
   modules: [
     'nuxt-openid-connect'
   ],
+
+  // configuration for nuxt-openid-connect
   openidConnect: {
     addPlugin: true,
     op: {
@@ -52,7 +75,13 @@ export default defineNuxtConfig({
       cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc', // 32
       cookieEncryptIV: 'ab83667c72eec9e4', // 16
       cookieEncryptALGO: 'aes-256-cbc',
-      cookieMaxAge: 24 * 60 * 60 //  default one day
+      cookieMaxAge: 24 * 60 * 60, //  default one day
+      cookieFlags: { // default is empty 
+        access_token: { 
+          httpOnly: true,
+          secure: false,
+        }
+      }
     }
   }
 })

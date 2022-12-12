@@ -26,22 +26,24 @@ export default defineEventHandler(async (event) => {
   res.writeHead(302, { Location: '/' })
   res.end()
 
-  async function getUserInfo (accessToken: string) {
+  async function getUserInfo(accessToken: string) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
       setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
-        maxAge: config.cookieMaxAge
+        maxAge: config.cookieMaxAge,
+        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
       })
       const cookie = config.cookie
       for (const [key, value] of Object.entries(userinfo)) {
         if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
           setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
-            maxAge: config.cookieMaxAge
+            maxAge: config.cookieMaxAge,
+            ...config.cookieFlags[key as keyof typeof config.cookieFlags]
           })
         }
       }
       const encryptedText = await encrypt(JSON.stringify(userinfo), config)
-      setCookie(event, config.cookiePrefix + 'user_info', encryptedText)
+      setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
     } catch (err) {
       console.log(err)
     }
