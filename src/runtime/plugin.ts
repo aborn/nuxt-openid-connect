@@ -67,8 +67,12 @@ class Oidc {
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
         if (isSet(userinfoCookie) && userinfoCookie.value) {
           const userInfoStr = await decrypt(userinfoCookie.value, config)
-          const userinfo = JSON.parse(userInfoStr)
-          this.setUser(userinfo)
+          if (userInfoStr) {
+            const userinfo = JSON.parse(userInfoStr)
+            this.setUser(userinfo)
+          } else {
+            console.error('userInfoStr undefined!')
+          }
         } else {
           console.log('empty cookie')
           this.setUser({})
