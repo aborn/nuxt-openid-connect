@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   res.writeHead(302, { Location: '/' })
   res.end()
 
-  async function getUserInfo(accessToken: string) {
+  async function getUserInfo (accessToken: string) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
       setCookie(event, config.cookiePrefix + 'access_token', accessToken, {

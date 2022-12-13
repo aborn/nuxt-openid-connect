@@ -22,17 +22,17 @@ export default defineNuxtConfig({
         issuer: '',
         clientId: '',
         clientSecret: '',
-        callbackUrl: '',
+        callbackUrl: ''
       },
       config: {
         cookieFlags: {
           access_token: {
             httpOnly: true,
-            secure: false,
+            secure: false
           }
         }
       }
-    },
+    }
   },
 
   openidConnect: {
@@ -44,7 +44,7 @@ export default defineNuxtConfig({
       callbackUrl: '',
       scope: [
         'email',
-        'profile',
+        'profile'
       ]
     },
     config: {
@@ -56,11 +56,11 @@ export default defineNuxtConfig({
       cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc',
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
-      cookieMaxAge: 24 * 60 * 60,//  default one day
+      cookieMaxAge: 24 * 60 * 60, //  default one day
       cookieFlags: {
         access_token: {
           httpOnly: true,
-          secure: false,
+          secure: false
         }
       }
     }
