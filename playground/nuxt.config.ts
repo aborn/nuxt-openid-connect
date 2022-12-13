@@ -1,4 +1,3 @@
-import openidConnect from '..'
 
 export default defineNuxtConfig({
   app: {
@@ -12,9 +11,30 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   modules: [
-    openidConnect
+    'nuxt-openid-connect'
   ],
+
+  runtimeConfig: {
+    openidConnect: {
+      op: {
+        issuer: '',
+        clientId: '',
+        clientSecret: '',
+        callbackUrl: '',
+      },
+      config: {
+        cookieFlags: {
+          access_token: {
+            httpOnly: true,
+            secure: false,
+          }
+        }
+      }
+    },
+  },
+
   openidConnect: {
     addPlugin: true,
     op: {
@@ -25,11 +45,10 @@ export default defineNuxtConfig({
       scope: [
         'email',
         'profile',
-        'address'
       ]
     },
     config: {
-      response_types: 'token id_token',
+      response_type: 'code',
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',
@@ -37,7 +56,13 @@ export default defineNuxtConfig({
       cookieEncryptKey: 'bfnuxt9c2470cb477d907b1e0917oidc',
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
-      cookieMaxAge: 24 * 60 * 60 //  default one day
+      cookieMaxAge: 24 * 60 * 60,//  default one day
+      cookieFlags: {
+        access_token: {
+          httpOnly: true,
+          secure: false,
+        }
+      }
     }
   }
 })

@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
 import defu from 'defu'
 import { name, version } from '../package.json'
+import { CookieSerializeOptions } from 'cookie-es';
 
 export type OidcProvider = {
   issuer: string,
@@ -20,7 +21,10 @@ export type Config = {
   cookieEncryptIV: string,
   cookieEncryptALGO: string,
   cookieMaxAge: number,
-  response_type: string
+  response_type: string,
+  cookieFlags?: {
+    [key: string]: CookieSerializeOptions,
+  }
 }
 
 export interface ModuleOptions {
@@ -47,9 +51,7 @@ export default defineNuxtModule<ModuleOptions>({
       clientSecret: '',
       callbackUrl: '',
       scope: [
-        'email',
-        'profile',
-        'address'
+        'openid',
       ]
     },
     // express-session configuration
@@ -62,10 +64,11 @@ export default defineNuxtModule<ModuleOptions>({
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
       cookieMaxAge: 24 * 60 * 60, //  default one day
-      response_type: 'id_token'
+      response_type: 'id_token',
+      cookieFlags: {}
     }
   },
-  setup (options, nuxt) {
+  setup(options, nuxt) {
     // console.log(options.op)
     const { resolve } = createResolver(import.meta.url)
     const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })

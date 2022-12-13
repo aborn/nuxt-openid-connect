@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     redirect_uri: callbackUrl,
     response_type: config.response_type,
     nonce: sessionid,
-    scope: ['openid'].concat(op.scope).join(' ') // 'openid'
+    scope: op.scope.join(' ') // 'openid' will be added by default
   }
   const authUrl = issueClient.authorizationUrl(parameters)
   // console.log(authUrl)
@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
   console.log(sessionid)
   if (sessionid) {
     setCookie(event, sessionkey, sessionid, {
-      maxAge: config.cookieMaxAge
+      maxAge: config.cookieMaxAge,
+      ...config.cookieFlags[sessionkey as keyof typeof config.cookieFlags]
     })
   }
 
