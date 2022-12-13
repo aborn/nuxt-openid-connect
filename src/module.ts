@@ -51,7 +51,9 @@ export default defineNuxtModule<ModuleOptions>({
       clientSecret: '',
       callbackUrl: '',
       scope: [
-        'openid'
+        'email',
+        'profile',
+        'address'
       ]
     },
     // express-session configuration
