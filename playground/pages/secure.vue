@@ -2,12 +2,18 @@
   <div>
     <NavBar />
     <main class="container">
+      <h1> Secure Page </h1>
       <b-alert show variant="success">
-        You should see this page without need to authentication!
+        Secured content
+        You should see this page <b> only if authenticated!</b>
       </b-alert>
     </main>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+const { $oidc } = useNuxtApp()
+if(!$oidc.isLoggedIn) {
+  navigateTo('/401');
+}
 </script>

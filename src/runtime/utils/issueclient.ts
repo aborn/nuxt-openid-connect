@@ -1,6 +1,8 @@
 import { Issuer } from 'openid-client'
 import { OidcProvider } from '../../module'
 import { useRuntimeConfig } from '#imports'
+import { logger } from './logger'
+
 
 export const initClient = async (op: OidcProvider, req: any) => {
   const { config } = useRuntimeConfig().openidConnect
@@ -8,7 +10,7 @@ export const initClient = async (op: OidcProvider, req: any) => {
   const callbackUrl = host ? 'http://' + host + '/oidc/cbt' : op.callbackUrl
 
   const issuer = await Issuer.discover(op.issuer)
-  // console.log('Discovered issuer %s %O', issuer.issuer, issuer.metadata)
+  logger.trace('Discovered issuer %s %O', issuer.issuer, issuer.metadata)
   const client = new issuer.Client({
     client_id: op.clientId,
     client_secret: op.clientSecret,
