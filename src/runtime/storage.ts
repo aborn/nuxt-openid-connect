@@ -1,28 +1,28 @@
 import { isUnset, isSet } from './utils/utils'
 
 export type StorageOptions = {
-    localStorage: boolean,
-    prefix: string,
-    ignoreExceptions: boolean
+  localStorage: boolean,
+  prefix: string,
+  ignoreExceptions: boolean
 }
 
 export class Storage {
   public options: StorageOptions
   private userInfoKey: string
 
-  constructor (options: StorageOptions) {
+  constructor(options: StorageOptions) {
     this.options = options
     this.userInfoKey = 'user'
   }
 
-  getPrefix (): string {
+  getPrefix(): string {
     if (!this.options.localStorage) {
       throw new Error('Cannot get prefix; localStorage is off')
     }
     return this.options.prefix
   }
 
-  setUserInfo (user:any) {
+  setUserInfo(user: any) {
     if (isUnset(user)) {
       return
     }
@@ -35,7 +35,7 @@ export class Storage {
     this.setLocalStorage(this.userInfoKey, _userValue)
   }
 
-  getUserInfo (): any {
+  getUserInfo(): any {
     if (this.isLocalStorageEnabled()) {
       const _user = this.getLocalStorage(this.userInfoKey)
       try {
@@ -48,18 +48,18 @@ export class Storage {
     }
   }
 
-  removeUserInfo (): void {
+  removeUserInfo(): void {
     if (this.isLocalStorageEnabled()) {
       this.removeLocalStorage(this.userInfoKey)
     }
   }
 
-  isLoggedIn (): boolean {
+  isLoggedIn(): boolean {
     const user = this.getUserInfo()
     return isSet(user) && Object.keys(user).length > 0
   }
 
-  setLocalStorage (key: string, value: string): string | void {
+  setLocalStorage(key: string, value: string): string | void {
     // Unset null, undefined
     if (isUnset(value)) {
       return this.removeLocalStorage(key)
@@ -82,7 +82,7 @@ export class Storage {
     return value
   }
 
-  getLocalStorage (key: string): string {
+  getLocalStorage(key: string): string {
     if (!this.isLocalStorageEnabled()) {
       return
     }
@@ -94,7 +94,7 @@ export class Storage {
     return value
   }
 
-  removeLocalStorage (key: string): void {
+  removeLocalStorage(key: string): void {
     if (!this.isLocalStorageEnabled()) {
       return
     }
@@ -104,7 +104,7 @@ export class Storage {
   }
 
   // origin from https://github.com/nuxt-community/auth-module
-  isLocalStorageEnabled (): boolean {
+  isLocalStorageEnabled(): boolean {
     // Local Storage only exists in the browser
     if (!process.client) {
       return false
@@ -123,7 +123,7 @@ export class Storage {
         // eslint-disable-next-line no-console
         console.warn(
           "[AUTH] Local storage is enabled in config, but browser doesn't" +
-                    ' support it'
+          ' support it'
         )
       }
       return false

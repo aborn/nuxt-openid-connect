@@ -3,9 +3,10 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { initClient } from '../../../utils/issueclient'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '../../../utils/logger'
 
 export default defineEventHandler(async (event) => {
-  console.log('oidc/login calling')
+  logger.info('[Login]: oidc/login calling')
   const { op, config } = useRuntimeConfig().openidConnect
 
   const req = event.req
@@ -14,12 +15,12 @@ export default defineEventHandler(async (event) => {
   const sessionkey = config.secret
   let sessionid = getCookie(event, config.secret)
   if (!sessionid) {
-    // console.log('regenerate sessionid')
+    logger.trace('[Login]: regenerate sessionid')
     sessionid = uuidv4()
   }
 
   const callbackUrl = (op.callbackUrl && op.callbackUrl.length > 0) ? op.callbackUrl : 'http://' + req.headers.host + '/oidc/cbt'
-  // console.log('cabackurl:', callbackUrl, op.callbackUrl)
+  logger.trace('[Login]: cabackurl: ', callbackUrl, op.callbackUrl)
 
   const parameters = {
     redirect_uri: callbackUrl,
@@ -28,9 +29,9 @@ export default defineEventHandler(async (event) => {
     scope: op.scope.join(' ') // 'openid' will be added by default
   }
   const authUrl = issueClient.authorizationUrl(parameters)
-  // console.log(authUrl)
+  logger.trace('[Login]: Auth Url: ' + authUrl)
 
-  console.log(sessionid)
+  logger.debug('[Login]: sessionid: ' + sessionid)
   if (sessionid) {
     setCookie(event, sessionkey, sessionid, {
       maxAge: config.cookieMaxAge,

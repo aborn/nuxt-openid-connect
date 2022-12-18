@@ -1,16 +1,17 @@
 import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { CBT_PAGE_TEMPATE } from '../../../utils/template'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '@nuxt/kit'
 
 export default defineEventHandler((event) => {
-  console.log('oidc/cbt calling')
+  logger.debug('[CBT]: oidc/cbt calling')
   const { config } = useRuntimeConfig().openidConnect
   const res = event.res
   const html = CBT_PAGE_TEMPATE
 
   const sessionkey = config.secret
   const sessionid = getCookie(event, sessionkey)
-  // console.log(sessionid)
+  // logger.debug('[CBT]:' + sessionid)
   /* setCookie(event, sessionkey, sessionid, {
     maxAge: 24 * 60 * 60 // oneday
   }) */

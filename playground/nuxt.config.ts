@@ -43,12 +43,15 @@ export default defineNuxtConfig({
       clientSecret: 'secret',
       callbackUrl: '',
       scope: [
+        'openid',
         'email',
-        'profile'
+        'profile',
+        // 'address'
       ]
     },
     config: {
-      response_type: 'id_token',
+      debug: true,
+      response_type: 'code',
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',

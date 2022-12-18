@@ -1,3 +1,4 @@
+const debug = useRuntimeConfig().openidConnect.config.debug ?? false
 export const CBT_PAGE_TEMPATE = `
 <!DOCTYPE html>
 <html>
@@ -8,7 +9,7 @@ export const CBT_PAGE_TEMPATE = `
 
   <script>
     const hash = window.location.hash
-    console.log(hash)
+    `+ (debug ? `console.log(hash)` : ``) + `
     if (hash.length > 0 && hash.includes('#')) {
       window.location.replace(window.location.href.replace('cbt#', 'callback?'))
     }

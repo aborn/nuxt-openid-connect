@@ -2,11 +2,12 @@ import { getCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
 import { useRuntimeConfig } from '#imports'
+import { logger } from '../../../utils/logger'
 
 export default defineEventHandler(async (event) => {
   const { config, op } = useRuntimeConfig().openidConnect
-  console.log('oidc/user calling')
-  // console.log(req.headers.cookie)
+  logger.debug('[USER]: oidc/user calling')
+  logger.trace('[USER]: ' + event.req.headers.cookie)
 
   const sessionid = getCookie(event, config.secret)
   const accesstoken = getCookie(event, config.cookiePrefix + 'access_token')
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
       }
       return userinfo
     } catch (err) {
-      console.log(err)
+      logger.error('[USER]: ' + err)
       deleteCookie(event, config.secret)
       deleteCookie(event, config.cookiePrefix + 'access_token')
       deleteCookie(event, config.cookiePrefix + 'user_info')
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
       return {}
     }
   } else {
-    console.log('empty accesstoken for access userinfo')
+    logger.debug('[USER]: empty accesstoken for access userinfo')
     return {}
   }
 })
