@@ -4,9 +4,9 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
-      "off"
+      "warn"
     ],
-    "no-console": "off",
+    "no-console": "warn",
     "vue/multi-word-component-names": "off"
   }
 }

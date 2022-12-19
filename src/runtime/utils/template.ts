@@ -1,4 +1,7 @@
+import { useRuntimeConfig } from '#imports';
+
 const debug = useRuntimeConfig().openidConnect.config.debug ?? false
+
 export const CBT_PAGE_TEMPATE = `
 <!DOCTYPE html>
 <html>

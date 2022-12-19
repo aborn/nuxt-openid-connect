@@ -7,5 +7,5 @@
   </div>
 </template>
 
-<script lang="ts" >
+<script lang="ts">
 </script>
