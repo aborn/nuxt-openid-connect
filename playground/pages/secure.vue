@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 const { $oidc } = useNuxtApp()
-if(!$oidc.isLoggedIn) {
-  navigateTo('/401');
+if (!$oidc.isLoggedIn) {
+  navigateTo('/401')
 }
 </script>

@@ -3,7 +3,6 @@ import { Storage, StorageOptions } from './storage'
 import { isUnset, isSet } from './utils/utils'
 import { encrypt, decrypt } from './utils/encrypt'
 import { useState, useFetch, useRuntimeConfig, useCookie } from '#imports'
-import { logger } from '@nuxt/kit'
 
 interface UseState {
   user: any,
@@ -63,7 +62,7 @@ class Oidc {
   async fetchUser() {
     try {
       if (process.server) {
-        console.log('serve-render: fetchUser from cookie.')
+        // console.log('serve-render: fetchUser from cookie.')
         const { config } = useRuntimeConfig()?.public?.openidConnect
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
         if (isSet(userinfoCookie) && userinfoCookie.value) {
@@ -80,7 +79,7 @@ class Oidc {
         }
       } else {
         // this.$useState.value.user is set by server, and pass to client ? how achived it ?
-        console.log('client-render: fetchUser from server.')
+        // console.log('client-render: fetchUser from server.')
         const { data, pending, refresh, error } = await useFetch('/oidc/user')
         this.setUser(data.value)
         // console.log('fetchUser from server-api call.', data.value)
@@ -117,7 +116,7 @@ class Oidc {
 
 export default defineNuxtPlugin((nuxtApp) => {
   // TODO: enable consola debug mode here instead of console.log
-  console.log('--- Nuxt plugin: nuxt-openid-connect!')
+  // console.log('--- Nuxt plugin: nuxt-openid-connect!')
   const oidc = new Oidc()
   nuxtApp.provide('oidc', oidc)
   // console.log('--- Nuxt plugin: DEBUG MODE:' + useNuxtApp().ssrContext?.runtimeConfig.openidConnect.config.debug);
