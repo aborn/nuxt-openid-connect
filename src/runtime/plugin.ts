@@ -74,7 +74,7 @@ class Oidc {
             console.error('userInfoStr undefined!')
           }
         } else {
-          console.log('empty cookie')
+          // console.log('empty cookie')
           this.setUser({})
         }
       } else {
