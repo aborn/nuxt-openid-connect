@@ -1,8 +1,8 @@
 import { defineEventHandler, getCookie, setCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
-import { useRuntimeConfig } from '#imports'
 import { logger } from '../../../utils/logger'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   logger.debug('[CALLBACK]: oidc/callback calling')
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   res.writeHead(302, { Location: '/' })
   res.end()
 
-  async function getUserInfo(accessToken: string) {
+  async function getUserInfo (accessToken: string) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
       setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
       const encryptedText = await encrypt(JSON.stringify(userinfo), config)
       setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
     } catch (err) {
-      logger.error("[CALLBACK]: " + err)
+      logger.error('[CALLBACK]: ' + err)
     }
   }
 })
