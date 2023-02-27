@@ -1,8 +1,8 @@
 import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
-
 import { initClient } from '../../../utils/issueclient'
 import { logger } from '../../../utils/logger'
+import { getRedirectUrl } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -10,6 +10,7 @@ export default defineEventHandler(async (event) => {
   const { op, config } = useRuntimeConfig().openidConnect
 
   const req = event.node.req
+  const redirectUrl = getRedirectUrl(req.url)
   const res = event.node.res
   const issueClient = await initClient(op, req)
   const sessionkey = config.secret
@@ -19,8 +20,8 @@ export default defineEventHandler(async (event) => {
     sessionid = uuidv4()
   }
 
-  const callbackUrl = (op.callbackUrl && op.callbackUrl.length > 0) ? op.callbackUrl : 'http://' + req.headers.host + '/oidc/cbt'
-  logger.trace('[Login]: cabackurl: ', callbackUrl, op.callbackUrl)
+  const callbackUrl = 'http://' + req.headers.host + '/oidc/cbt?redirect=' + redirectUrl
+  logger.info('[Login]: cabackurl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
 
   const parameters = {
     redirect_uri: callbackUrl,

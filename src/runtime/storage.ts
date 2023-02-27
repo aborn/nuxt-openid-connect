@@ -37,7 +37,7 @@ export class Storage {
 
   getUserInfo(): any {
     if (this.isLocalStorageEnabled()) {
-      const _user = this.getLocalStorage(this.userInfoKey)
+      const _user = this.getLocalStorage(this.userInfoKey) as string
       try {
         return JSON.parse(_user)
       } catch (err) {
@@ -82,9 +82,9 @@ export class Storage {
     return value
   }
 
-  getLocalStorage(key: string): string {
+  getLocalStorage(key: string): string | null {
     if (!this.isLocalStorageEnabled()) {
-      return
+      return null
     }
 
     const _key = this.getPrefix() + key

@@ -2,6 +2,7 @@ import { defineEventHandler, getCookie, setCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
+import { getRedirectUrl } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -9,16 +10,17 @@ export default defineEventHandler(async (event) => {
   const { op, config } = useRuntimeConfig().openidConnect
   const sessionid = getCookie(event, config.secret)
   const req = event.node.req
+  const redirectUrl = getRedirectUrl(req.url)
   const res = event.node.res
   const issueClient = await initClient(op, req)
   const params = issueClient.callbackParams(req)
-  const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
 
   if (params.access_token) {
     logger.debug('[CALLBACK]: has access_token in params')
     await getUserInfo(params.access_token)
   } else if (params.code) {
     logger.debug('[CALLBACK]: has code in params')
+    const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
     const tokenSet = await issueClient.callback(callBackUrl, params, { nonce: sessionid })
     if (tokenSet.access_token) {
       await getUserInfo(tokenSet.access_token)
@@ -26,7 +28,7 @@ export default defineEventHandler(async (event) => {
   } else {
     logger.debug('[CALLBACK]: empty callback')
   }
-  res.writeHead(302, { Location: '/' })
+  res.writeHead(302, { Location: redirectUrl || '/' })
   res.end()
 
   async function getUserInfo (accessToken: string) {

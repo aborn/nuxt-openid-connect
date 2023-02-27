@@ -1,8 +1,7 @@
 import { Issuer } from 'openid-client'
 import { OidcProvider } from '../../module'
-import { useRuntimeConfig } from '#imports'
 import { logger } from './logger'
-
+import { useRuntimeConfig } from '#imports'
 
 export const initClient = async (op: OidcProvider, req: any) => {
   const { config } = useRuntimeConfig().openidConnect

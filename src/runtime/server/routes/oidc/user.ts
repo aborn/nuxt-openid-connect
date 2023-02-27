@@ -1,8 +1,8 @@
 import { getCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
-import { useRuntimeConfig } from '#imports'
 import { logger } from '../../../utils/logger'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const { config, op } = useRuntimeConfig().openidConnect
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
         const encryptedText = await encrypt(JSON.stringify(userinfo), config)
         setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
       } catch (err) {
-        console.error('encrypted userinfo error.', err)
+        logger.error('encrypted userinfo error.', err)
       }
       return userinfo
     } catch (err) {

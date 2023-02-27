@@ -96,8 +96,7 @@ class Oidc {
   login (redirect = '/') {
     if (process.client) {
       const params = new URLSearchParams({ redirect })
-      const toStr = '/oidc/login' // + params.toString()
-      // console.log(toStr)
+      const toStr = '/oidc/login?' + params.toString()
       window.location.replace(toStr)
     }
   }
