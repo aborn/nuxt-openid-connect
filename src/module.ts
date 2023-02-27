@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
-import defu from 'defu'
+import { defu } from 'defu'
 import { name, version } from '../package.json'
 import { logger } from './runtime/utils/logger'
 
@@ -80,7 +80,7 @@ export default defineNuxtModule<ModuleOptions>({
       cookieFlags: {}
     }
   },
-  setup (options, nuxt) {
+  setup(options, nuxt) {
     logger.level = options.config.debug === true ? 5 : 0 // 4 = debug, 5 = trace
     logger.info('[DEBUG MODE]: ', options.config.debug)
     logger.debug('[WITHOUT ENV VARS] options:', options)

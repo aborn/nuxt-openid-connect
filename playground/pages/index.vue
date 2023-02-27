@@ -6,9 +6,9 @@
       This demo is using nuxt-openid-connect v{{ version }}
       <div class="mt-1">
         <template v-if="$oidc.isLoggedIn">
-          <b-btn class="ml-3" variant="info" to="/secure">
+          <button class="ml-3" variant="info" to="/secure">
             Secure
-          </b-btn>
+          </button>
           <button class="ml-3" variant="danger" @click="$oidc.logout()">
             Logout
           </button>
@@ -20,7 +20,7 @@
 
       <div>
         User status:
-        <b-badge>{{ $oidc.isLoggedIn ? 'Logged In' : 'Guest' }}</b-badge>
+        <span>{{ $oidc.isLoggedIn ? 'Logged In' : 'Guest' }}</span>
       </div>
     </main>
   </div>

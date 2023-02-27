@@ -120,7 +120,6 @@ export class Storage {
       return true
     } catch (e) {
       if (!this.options.ignoreExceptions) {
-        // eslint-disable-next-line no-console
         console.warn(
           "[AUTH] Local storage is enabled in config, but browser doesn't" +
           ' support it'
