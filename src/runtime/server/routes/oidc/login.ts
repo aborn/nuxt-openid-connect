@@ -2,15 +2,15 @@ import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
 
 import { initClient } from '../../../utils/issueclient'
-import { useRuntimeConfig } from '#imports'
 import { logger } from '../../../utils/logger'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   logger.info('[Login]: oidc/login calling')
   const { op, config } = useRuntimeConfig().openidConnect
 
-  const req = event.req
-  const res = event.res
+  const req = event.node.req
+  const res = event.node.res
   const issueClient = await initClient(op, req)
   const sessionkey = config.secret
   let sessionid = getCookie(event, config.secret)
