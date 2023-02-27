@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     sessionid = uuidv4()
   }
 
-  const callbackUrl = 'http://' + req.headers.host + '/oidc/cbt?redirect=' + redirectUrl
+  const callbackUrl = (op.callbackUrl && op.callbackUrl.length > 0) ? op.callbackUrl + '?redirect=' + redirectUrl : 'http://' + req.headers.host + '/oidc/cbt?redirect=' + redirectUrl
   logger.info('[Login]: cabackurl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
 
   const parameters = {
