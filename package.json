@@ -43,6 +43,7 @@
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
+    "@types/node": "^18.14.2",
     "@types/uuid": "^8.3.4",
     "eslint": "latest",
     "nuxt": "^3.2.2"

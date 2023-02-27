@@ -14,7 +14,7 @@ class Oidc {
   private $useState: any // State: Nuxt.useState (share state in all nuxt pages and components) https://v3.nuxtjs.org/guide/features/state-management
   public $storage: Storage // LocalStorage: Browser.localStorage （share state in all sites, use in page refresh.）
 
-  constructor() {
+  constructor () {
     this.state = { user: {}, isLoggedIn: false }
 
     this.$useState = useState<UseState>('useState', () => { return { user: {}, isLoggedIn: false } })
@@ -29,7 +29,7 @@ class Oidc {
     this.$storage = storage
   }
 
-  get user() {
+  get user () {
     const userInfoState = this.$useState.value.user
     const userInfoLS = this.$storage.getUserInfo()
     if ((isUnset(userInfoState))) {
@@ -42,14 +42,14 @@ class Oidc {
     // return this.state.user  // not auto update
   }
 
-  get isLoggedIn() {
+  get isLoggedIn () {
     const isLoggedIn = this.$useState.value.isLoggedIn
     const isLoggedInLS = this.$storage.isLoggedIn()
     // console.log('isLoggedIn', isLoggedIn, isLoggedInLS)
     return isLoggedIn || isLoggedInLS
   }
 
-  setUser(user: any) {
+  setUser (user: any) {
     this.state.user = user
     this.state.isLoggedIn = Object.keys(user).length > 0
 
@@ -59,7 +59,7 @@ class Oidc {
     this.$storage.setUserInfo(user)
   }
 
-  async fetchUser() {
+  async fetchUser () {
     try {
       if (process.server) {
         // console.log('serve-render: fetchUser from cookie.')
@@ -93,7 +93,7 @@ class Oidc {
     }
   }
 
-  login(redirect = '/') {
+  login (redirect = '/') {
     if (process.client) {
       const params = new URLSearchParams({ redirect })
       const toStr = '/oidc/login' // + params.toString()
@@ -102,7 +102,7 @@ class Oidc {
     }
   }
 
-  logout() {
+  logout () {
     // TODO clear user info when accessToken expired.
     if (process.client) {
       this.$useState.value.user = {}
