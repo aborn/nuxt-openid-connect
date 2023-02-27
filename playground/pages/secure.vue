@@ -12,8 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-const { $oidc } = useNuxtApp()
-if (!$oidc.isLoggedIn) {
-  navigateTo('/401')
-}
+definePageMeta({
+  middleware: ['auth']
+})
 </script>
