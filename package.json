@@ -35,7 +35,7 @@
     "pub": "npm publish --access public"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0",
+    "@nuxt/kit": "^3.2.2",
     "defu": "^6.0.0",
     "openid-client": "^5.1.6",
     "uuid": "^9.0.0"
@@ -45,7 +45,7 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/uuid": "^8.3.4",
     "eslint": "latest",
-    "nuxt": "^3.0.0"
+    "nuxt": "^3.2.2"
   },
   "bugs": {
     "url": "https://github.com/aborn/nuxt-openid-connect/issues"
