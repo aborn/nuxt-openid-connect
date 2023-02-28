@@ -5,6 +5,14 @@ import { logger } from '../../../utils/logger'
 import { getRedirectUrl } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
+function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: string | undefined): string {
+  if ((callbackUrl && callbackUrl.length > 0)) {
+    return callbackUrl.includes('?') ? (callbackUrl + '&redirect=' + redirectUrl) : (callbackUrl + '?redirect=' + redirectUrl)
+  } else {
+    return 'http://' + host + '/oidc/cbt?redirect=' + redirectUrl
+  }
+}
+
 export default defineEventHandler(async (event) => {
   logger.info('[Login]: oidc/login calling')
   const { op, config } = useRuntimeConfig().openidConnect
@@ -20,7 +28,7 @@ export default defineEventHandler(async (event) => {
     sessionid = uuidv4()
   }
 
-  const callbackUrl = (op.callbackUrl && op.callbackUrl.length > 0) ? op.callbackUrl + '?redirect=' + redirectUrl : 'http://' + req.headers.host + '/oidc/cbt?redirect=' + redirectUrl
+  const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
   logger.info('[Login]: cabackurl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
 
   const parameters = {
