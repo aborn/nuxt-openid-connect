@@ -112,12 +112,22 @@ export default defineNuxtModule<ModuleOptions>({
         handler: resolveRuntimeModule('./server/routes/oidc/callback')
       })
       nitroConfig.handlers.push({
+        method: 'post',
+        route: '/oidc/callback',
+        handler: resolveRuntimeModule('./server/routes/oidc/callback')
+      })
+      nitroConfig.handlers.push({
         method: 'get',
         route: '/oidc/user',
         handler: resolveRuntimeModule('./server/routes/oidc/user')
       })
       nitroConfig.handlers.push({
         method: 'get',
+        route: '/oidc/cbt',
+        handler: resolveRuntimeModule('./server/routes/oidc/cbt')
+      })
+      nitroConfig.handlers.push({
+        method: 'post',
         route: '/oidc/cbt',
         handler: resolveRuntimeModule('./server/routes/oidc/cbt')
       })

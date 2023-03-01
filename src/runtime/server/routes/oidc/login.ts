@@ -1,46 +1,45 @@
 import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
+import { generators } from 'openid-client'
 import { initClient } from '../../../utils/issueclient'
 import { logger } from '../../../utils/logger'
-import { getRedirectUrl } from '../../../utils/utils'
+import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
-
-function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: string | undefined): string {
-  if ((callbackUrl && callbackUrl.length > 0)) {
-    return callbackUrl.includes('?') ? (callbackUrl + '&redirect=' + redirectUrl) : (callbackUrl + '?redirect=' + redirectUrl)
-  } else {
-    return 'http://' + host + '/oidc/cbt?redirect=' + redirectUrl
-  }
-}
 
 export default defineEventHandler(async (event) => {
   logger.info('[Login]: oidc/login calling')
-  const { op, config } = useRuntimeConfig().openidConnect
-
   const req = event.node.req
-  const redirectUrl = getRedirectUrl(req.url)
   const res = event.node.res
-  const issueClient = await initClient(op, req)
+
+  const { op, config } = useRuntimeConfig().openidConnect
+  const redirectUrl = getRedirectUrl(req.url)
+  const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
+  const defCallBackUrl = getDefaultBackUrl(redirectUrl, req.headers.host)
+
+  const issueClient = await initClient(op, req, [defCallBackUrl, callbackUrl])
   const sessionkey = config.secret
   let sessionid = getCookie(event, config.secret)
   if (!sessionid) {
     logger.trace('[Login]: regenerate sessionid')
-    sessionid = uuidv4()
+    sessionid = generators.nonce() // uuidv4()
   }
 
-  const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
-  logger.info('[Login]: cabackurl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
+  // response_mode: query、fragment(default)、form_post
+  // const responseMode = config.response_mode || 'query'
+  logger.info('[Login]: cabackurl & op.callbackUrl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
+  // logger.info('  response_mode:' + responseMode + ', response_type:' + config.response_type)
 
   const parameters = {
     redirect_uri: callbackUrl,
     response_type: config.response_type,
+    // response_mode: responseMode,
     nonce: sessionid,
     scope: op.scope.join(' ') // 'openid' will be added by default
   }
   const authUrl = issueClient.authorizationUrl(parameters)
-  logger.trace('[Login]: Auth Url: ' + authUrl)
+  logger.info('[Login]: Auth Url: ' + authUrl)
 
-  logger.debug('[Login]: sessionid: ' + sessionid)
+  logger.info('[Login]: sessionid: ' + sessionid)
   if (sessionid) {
     setCookie(event, sessionkey, sessionid, {
       maxAge: config.cookieMaxAge,
