@@ -132,6 +132,11 @@ export default defineNuxtModule<ModuleOptions>({
         route: '/oidc/cbt',
         handler: resolveRuntimeModule('./server/routes/oidc/cbt')
       })
+      nitroConfig.handlers.push({
+        method: 'get',
+        route: '/oidc/error',
+        handler: resolveRuntimeModule('./server/routes/oidc/error')
+      })
 
       nitroConfig.externals = defu(typeof nitroConfig.externals === 'object' ? nitroConfig.externals : {}, {
         inline: [

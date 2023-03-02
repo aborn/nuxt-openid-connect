@@ -3,7 +3,7 @@ import { defineEventHandler, getCookie, setCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
-import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl } from '../../../utils/utils'
+import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -23,10 +23,11 @@ export default defineEventHandler(async (event) => {
   }
 
   const { op, config } = useRuntimeConfig().openidConnect
+  const responseMode = getResponseMode(config)
   const sessionid = getCookie(event, config.secret)
   const redirectUrl = getRedirectUrl(req.url)
-  logger.info('---Callback. redirectUrl:' + redirectUrl)
-  // logger.info(' -- req.url:' + req.url + '   method:' + req.method)
+  // logger.info('---Callback. redirectUrl:' + redirectUrl)
+  // logger.info(' -- req.url:' + req.url + '   #method:' + req.method + ' #response_mode:' + responseMode)
 
   const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
   const defCallBackUrl = getDefaultBackUrl(redirectUrl, req.headers.host)
@@ -35,27 +36,45 @@ export default defineEventHandler(async (event) => {
   const params = issueClient.callbackParams(request)
 
   if (params.access_token) {
+    // Implicit ID Token Flow: access_token
     logger.debug('[CALLBACK]: has access_token in params, accessToken:' + params.access_token)
     await getUserInfo(params.access_token)
+    res.writeHead(302, { Location: redirectUrl || '/' })
+    res.end()
   } else if (params.code) {
-    // code -> access_token
+    // Authorization Code Flow: code -> access_token
     logger.debug('[CALLBACK]: has code in params')
     const callBackUrl = op.callbackUrl.replace('cbt', 'callback')
     const tokenSet = await issueClient.callback(callBackUrl, params, { nonce: sessionid })
     if (tokenSet.access_token) {
       await getUserInfo(tokenSet.access_token)
     }
+    res.writeHead(302, { Location: redirectUrl || '/' })
+    res.end()
   } else {
-    // redirct to auth failed error page.
-    logger.error('[CALLBACK]: error callback')
+    // Error dealing.
+    // eslint-disable-next-line no-lonely-if
+    if (params.error) {
+      // redirct to auth failed error page.
+      logger.error('[CALLBACK]: error callback')
+      logger.error(params.error + ', error_description:' + params.error_description)
+      res.writeHead(302, { Location: '/oidc/error' })
+      res.end()
+    } else if (responseMode === 'fragment') {
+      logger.warn('[CALLBACK]: callback redirect')
+      res.writeHead(302, { Location: '/oidc/cbt?redirect=' + redirectUrl })
+      res.end()
+    } else {
+      logger.error('[CALLBACK]: error callback')
+      res.writeHead(302, { Location: redirectUrl || '/' })
+      res.end()
+    }
   }
-  res.writeHead(302, { Location: redirectUrl || '/' })
-  res.end()
 
   async function getUserInfo(accessToken: string) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
-      logger.info(userinfo)
+      // logger.info(userinfo)
       setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
         maxAge: config.cookieMaxAge,
         ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
