@@ -38,20 +38,19 @@ export default defineNuxtConfig({
   openidConnect: {
     addPlugin: true,
     op: {
-      issuer: 'your_issuer_value',
-      clientId: 'clientid',
-      clientSecret: 'secret',
-      callbackUrl: '',
+      issuer: 'http://192.168.26.114:8080/realms/test', // change to your OP addrress
+      clientId: 'testClient',
+      clientSecret: 'cnuLA78epx8s8vMbRxcaiXbzlS4u8bSA',
+      // callbackUrl: 'http://192.168.26.114:3000/oidc/callback', // optional
       scope: [
-        'openid',
         'email',
         'profile',
-        // 'address'
+        'address'
       ]
     },
     config: {
       debug: true,
-      response_type: 'code',
+      response_type: 'id_token token',
       secret: 'oidc._sessionid',
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',
