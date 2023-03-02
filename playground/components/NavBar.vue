@@ -26,6 +26,7 @@
       <li>
         <NuxtLink v-if="$oidc.isLoggedIn" to="/secure" class="contrast" aria-label="My files">
           <img :src="$oidc.user.avatar" style="height:50px;max-width:100%;border-radius: 50%;">
+          <span>{{ $oidc.user.name }}</span>
         </NuxtLink>
         <button v-else @click="$oidc.login()">
           login

@@ -1,3 +1,4 @@
+import * as http from 'http'
 import { defineEventHandler, getCookie, setCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
@@ -6,9 +7,21 @@ import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl } from '../../../util
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
-  logger.info('[CALLBACK]: oidc/callback calling')
   const req = event.node.req
   const res = event.node.res
+  logger.info('[CALLBACK]: oidc/callback calling, method:' + req.method)
+
+  let request = req
+  if (req.method === 'POST') {
+    // response_mode=form_post ('POST' method)
+    const body = await readBody(event)
+    request = {
+      method: req.method,
+      url: req.url,
+      body
+    } as unknown as http.IncomingMessage
+  }
+
   const { op, config } = useRuntimeConfig().openidConnect
   const sessionid = getCookie(event, config.secret)
   const redirectUrl = getRedirectUrl(req.url)
@@ -19,12 +32,10 @@ export default defineEventHandler(async (event) => {
   const defCallBackUrl = getDefaultBackUrl(redirectUrl, req.headers.host)
 
   const issueClient = await initClient(op, req, [defCallBackUrl, callbackUrl])
-  const params = issueClient.callbackParams(req)
+  const params = issueClient.callbackParams(request)
 
-  // logger.info('--- callbackParams:')
-  // logger.info(params)
   if (params.access_token) {
-    logger.debug('[CALLBACK]: has access_token in params')
+    logger.debug('[CALLBACK]: has access_token in params, accessToken:' + params.access_token)
     await getUserInfo(params.access_token)
   } else if (params.code) {
     // code -> access_token
@@ -44,6 +55,7 @@ export default defineEventHandler(async (event) => {
   async function getUserInfo(accessToken: string) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
+      logger.info(userinfo)
       setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
         maxAge: config.cookieMaxAge,
         ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]

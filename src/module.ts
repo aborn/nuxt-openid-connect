@@ -33,6 +33,7 @@ export type Config = {
   cookieEncryptALGO: string,
   cookieMaxAge: number,
   response_type: string,
+  response_mode?: string,
   cookieFlags?: {
     [key: string]: CookieSerializeOptions,
   }
