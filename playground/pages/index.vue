@@ -27,10 +27,12 @@
 </template>
 
 <script setup>
-// alternatively, you can also use it here
 import { version } from '../../package.json'
-const { $oidc } = useNuxtApp()
-console.log('here is 33 line..')
-console.log('isLogIn:', $oidc.isLoggedIn)
-// const user = useState('useState')
+
+// Access the plugin through the composable
+const oidc = useOidc()
+// Or through injected variable
+const { $oidc } = useNextApp()
+console.log('(composable) isLoggedIn:', oidc.isLoggedIn)
+console.log('(injected) isLoggedIn:', $oidc.isLoggedIn)
 </script>
