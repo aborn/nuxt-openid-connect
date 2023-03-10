@@ -32,7 +32,7 @@ import { version } from '../../package.json'
 // Access the plugin through the composable
 const oidc = useOidc()
 // Or through injected variable
-const { $oidc } = useNextApp()
+const { $oidc } = useNuxtApp()
 console.log('(composable) isLoggedIn:', oidc.isLoggedIn)
 console.log('(injected) isLoggedIn:', $oidc.isLoggedIn)
 </script>

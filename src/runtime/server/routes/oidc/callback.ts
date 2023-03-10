@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
     res.end()
   } else if (params.code) {
     // Authorization Code Flow: code -> access_token
-    logger.debug('[CALLBACK]: has code in params, code:' + params.code)
+    logger.debug('[CALLBACK]: has code in params, code:' + params.code + ' ,sessionid=' + sessionid)
     const tokenSet = await issueClient.callback(callbackUrl, params, { nonce: sessionid })
     // logger.info('received and validated tokens %j', tokenSet)
     // logger.info('validated ID Token claims %j', tokenSet.claims())

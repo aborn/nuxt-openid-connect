@@ -20,8 +20,10 @@ export default defineEventHandler(async (event) => {
   const sessionkey = config.secret
   let sessionid = getCookie(event, config.secret)
   if (!sessionid) {
-    logger.trace('[Login]: regenerate sessionid')
-    sessionid = generators.nonce() // uuidv4()
+    sessionid = generators.nonce()
+    logger.info('[Login]: regenerate sessionid=' + sessionid)
+  } else {
+    logger.info('[Login]: cookie sessionid=' + sessionid)
   }
 
   const responseMode = getResponseMode(config)
