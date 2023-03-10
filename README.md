@@ -89,7 +89,13 @@ export default defineNuxtConfig({
 
 ```
 
-Here is an [using example](https://github.com/aborn/playgrounds/tree/main/nuxt-openid-connect-demo).
+- Useage in setup.
+
+```ts
+const oidc = useOidc()
+```
+
+Here is an [usage example](https://github.com/aborn/nuxt-openid-connect/blob/main/playground/pages/index.vue).
 
 ## 💻 Development
 
