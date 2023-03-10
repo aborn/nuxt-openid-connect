@@ -9,7 +9,7 @@ interface UseState {
   isLoggedIn: boolean
 }
 
-class Oidc {
+export class Oidc {
   private state: UseState // only this plugin.
   private $useState: any // State: Nuxt.useState (share state in all nuxt pages and components) https://v3.nuxtjs.org/guide/features/state-management
   public $storage: Storage // LocalStorage: Browser.localStorage （share state in all sites, use in page refresh.）
