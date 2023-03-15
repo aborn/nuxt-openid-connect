@@ -14,6 +14,8 @@ src/runtime/utils/user.ts
 **/.yarn/cache
 **/.yarn/*state*
 
+# Generated dirs
+dist
 
 # Nuxt
 .nuxt
