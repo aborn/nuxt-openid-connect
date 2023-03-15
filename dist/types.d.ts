@@ -1,10 +1,13 @@
 
-import { ModuleOptions } from './module'
+import { ModuleOptions, ModuleHooks, ModuleRuntimeConfig, ModulePublicRuntimeConfig } from './module'
 
 declare module '@nuxt/schema' {
   interface NuxtConfig { ['openidConnect']?: Partial<ModuleOptions> }
   interface NuxtOptions { ['openidConnect']?: ModuleOptions }
+  interface NuxtHooks extends ModuleHooks {}
+  interface RuntimeConfig extends ModuleRuntimeConfig {}
+  interface PublicRuntimeConfig extends ModulePublicRuntimeConfig {}
 }
 
 
-export { Config, CookieSerializeOptions, ModuleOptions, OidcProvider, default } from './module'
+export { default } from './module'
