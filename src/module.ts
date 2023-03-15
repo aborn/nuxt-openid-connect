@@ -145,12 +145,17 @@ export default defineNuxtModule<ModuleOptions>({
         ]
       })
     })
+    let publicOps = Object.assign({}, options.op);
+    let cnfg = Object.assign({}, options.config);
+    delete(publicOps.clientSecret)
+    delete(cnfg.cookieEncryptALGO)
+    delete(cnfg.cookieEncryptIV)
+    delete(cnfg.cookieEncryptKey)
 
-    // config can be used in plugin.ts
     nuxt.options.runtimeConfig.public.openidConnect = defu(nuxt.options.runtimeConfig.public.openidConnect, {
-      op: options.op,
-      config: options.config
-    })
+      op: publicOps,
+      config: cnfg
+    });
 
     // openidConnect config will use in server
     nuxt.options.runtimeConfig.openidConnect = {

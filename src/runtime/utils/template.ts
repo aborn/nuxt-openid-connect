@@ -12,12 +12,10 @@ export const CBT_PAGE_TEMPATE = `
 
   <script>
     const hash = window.location.hash
-    if (hash.length > 0 && hash.includes('#')) {
-      if (window.location.href.includes('cbt#')) {
-        window.location.replace(window.location.href.replace('cbt#', 'callback?'))
-      } else if (window.location.href.includes('cbt?redirect')) {
-        window.location.replace(window.location.href.replace('/cbt?', '/callback?').replace('#', "&"))
-      }
+    if (window.location.href.includes('cbt#')) {
+      window.location.replace(window.location.href.replace('cbt#', 'callback?'))
+    } else if (window.location.href.includes('cbt?redirect')) {
+      window.location.replace(window.location.href.replace('/cbt?', '/callback?').replace('#', "&"))
     }
   </script>
 </body>
