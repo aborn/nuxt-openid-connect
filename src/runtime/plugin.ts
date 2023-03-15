@@ -63,7 +63,7 @@ export class Oidc {
     try {
       if (process.server) {
         // console.log('serve-render: fetchUser from cookie.')
-        const { config } = useRuntimeConfig()?.public?.openidConnect
+        const { config } = useRuntimeConfig()?.openidConnect
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
         if (isSet(userinfoCookie) && userinfoCookie.value) {
           const userInfoStr = await decrypt(userinfoCookie.value, config)
