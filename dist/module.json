@@ -1,0 +1,8 @@
+{
+  "name": "nuxt-openid-connect",
+  "version": "0.5.5",
+  "configKey": "openidConnect",
+  "compatibility": {
+    "nuxt": "^3.0.0-rc.8"
+  }
+}
