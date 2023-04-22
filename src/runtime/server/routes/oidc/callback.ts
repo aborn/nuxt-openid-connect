@@ -1,5 +1,5 @@
 import * as http from 'http'
-import { defineEventHandler, getCookie, setCookie } from 'h3'
+import { defineEventHandler, getCookie, setCookie, deleteCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
   const { op, config } = useRuntimeConfig().openidConnect
   const responseMode = getResponseMode(config)
   const sessionid = getCookie(event, config.secret)
+  deleteCookie(event, config.secret)
   const redirectUrl = getRedirectUrl(req.url)
   // logger.info('---Callback. redirectUrl:' + redirectUrl)
   // logger.info(' -- req.url:' + req.url + '   #method:' + req.method + ' #response_mode:' + responseMode)
