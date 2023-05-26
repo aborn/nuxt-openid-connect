@@ -2,6 +2,7 @@ import { getCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
+import { setCookieInfo, setCookieTokenAndRefreshToken } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -11,24 +12,22 @@ export default defineEventHandler(async (event) => {
 
   const sessionid = getCookie(event, config.secret)
   const accesstoken = getCookie(event, config.cookiePrefix + 'access_token')
+  const refreshToken = getCookie(event, config.cookiePrefix + 'refresh_token')
   const userinfoCookie = getCookie(event, config.cookiePrefix + 'user_info')
+  const issueClient = await initClient(op, event.node.req, [])
 
   if (userinfoCookie) {
+    logger.info('userinfo:Cookie')
     const userInfoStr: string | undefined = await decrypt(userinfoCookie, config)
     return JSON.parse(userInfoStr ?? '')
   } else if (accesstoken) {
+    logger.info('userinfo:accesstoken')
     try {
       // load user info from oidc server.
-      const issueClient = await initClient(op, event.node.req, [])
       const userinfo = await issueClient.userinfo(accesstoken)
-
+      console.log('userinfo %j', userinfo) // refresh_token
       // add encrypted userinfo to cookies.
-      try {
-        const encryptedText = await encrypt(JSON.stringify(userinfo), config)
-        setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
-      } catch (err) {
-        logger.error('encrypted userinfo error.', err)
-      }
+      await setCookieInfo(event, config, userinfo)
       return userinfo
     } catch (err) {
       logger.error('[USER]: ' + err)
@@ -43,6 +42,20 @@ export default defineEventHandler(async (event) => {
       }
       return {}
     }
+  } else if (refreshToken) {
+    logger.info('userinfo:refresh token')
+    const tokenSet = await issueClient.refresh(refreshToken)
+    console.log('refreshed and validated tokens %j', tokenSet)
+    console.log('refreshed ID Token claims %j', tokenSet.claims())
+    if (tokenSet.access_token) {
+      const userinfo = await issueClient.userinfo(tokenSet.access_token)
+      setCookieTokenAndRefreshToken(event, config, tokenSet)
+      await setCookieInfo(event, config, userinfo)
+      return userinfo
+    } else {
+      return {}
+    }
+    //  logger.info('userinfo:' + userinfo)
   } else {
     logger.debug('[USER]: empty accesstoken for access userinfo')
     return {}

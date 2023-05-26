@@ -1,3 +1,49 @@
+import { defineEventHandler, getCookie, setCookie } from 'h3'
+import { encrypt, decrypt } from './encrypt'
+import { logger } from './logger'
+
+export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet: any) => {
+  // token setting
+  if (tokenSet && tokenSet.expires_at) {
+    setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
+      expires: tokenSet.expires_at,
+      ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
+    })
+  } else {
+    setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
+      maxAge: config.cookieMaxAge,
+      ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
+    })
+  }
+
+  // refresh token setting
+  if (tokenSet && tokenSet.refresh_expires_in && tokenSet.refresh_token) {
+    setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
+      maxAge: tokenSet.refresh_expires_in
+    })
+  }
+}
+
+export const setCookieInfo = async (event: any, config: any, userinfo: any) => {
+  const { cookie, isCookieUserInfo } = config
+  if (isCookieUserInfo) {
+    for (const [key, value] of Object.entries(userinfo)) {
+      if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
+        setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
+          maxAge: config.cookieMaxAge,
+          ...config.cookieFlags[key as keyof typeof config.cookieFlags]
+        })
+      }
+    }
+    try {
+      const encryptedText = await encrypt(JSON.stringify(userinfo), config)
+      setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
+    } catch (err) {
+      logger.error('encrypted userinfo error.', err)
+    }
+  }
+}
+
 export const isUnset = (o: unknown): boolean =>
   typeof o === 'undefined' || o === null
 

@@ -3,7 +3,7 @@ import { defineEventHandler, getCookie, setCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
-import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode } from '../../../utils/utils'
+import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode, setCookieInfo, setCookieTokenAndRefreshToken } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
@@ -38,17 +38,15 @@ export default defineEventHandler(async (event) => {
   if (params.access_token) {
     // Implicit ID Token Flow: access_token
     logger.debug('[CALLBACK]: has access_token in params, accessToken:' + params.access_token)
-    await getUserInfo(params.access_token)
+    await processUserInfo(params.access_token, null, event)
     res.writeHead(302, { Location: redirectUrl || '/' })
     res.end()
   } else if (params.code) {
     // Authorization Code Flow: code -> access_token
     logger.debug('[CALLBACK]: has code in params, code:' + params.code + ' ,sessionid=' + sessionid)
     const tokenSet = await issueClient.callback(callbackUrl, params, { nonce: sessionid })
-    // logger.info('received and validated tokens %j', tokenSet)
-    // logger.info('validated ID Token claims %j', tokenSet.claims())
     if (tokenSet.access_token) {
-      await getUserInfo(tokenSet.access_token)
+      await processUserInfo(tokenSet.access_token, tokenSet, event)
     }
     res.writeHead(302, { Location: redirectUrl || '/' })
     res.end()
@@ -72,25 +70,16 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  async function getUserInfo(accessToken: string) {
+  async function processUserInfo(accessToken: string, tokenSet: any, event: any) {
     try {
       const userinfo = await issueClient.userinfo(accessToken)
-      // logger.info(userinfo)
-      setCookie(event, config.cookiePrefix + 'access_token', accessToken, {
-        maxAge: config.cookieMaxAge,
-        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
-      })
-      const cookie = config.cookie
-      for (const [key, value] of Object.entries(userinfo)) {
-        if (cookie && Object.prototype.hasOwnProperty.call(cookie, key)) {
-          setCookie(event, config.cookiePrefix + key, JSON.stringify(value), {
-            maxAge: config.cookieMaxAge,
-            ...config.cookieFlags[key as keyof typeof config.cookieFlags]
-          })
-        }
-      }
-      const encryptedText = await encrypt(JSON.stringify(userinfo), config)
-      setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
+      const { config } = useRuntimeConfig().openidConnect
+
+      // token and refresh token setting
+      setCookieTokenAndRefreshToken(event, config, tokenSet)
+
+      // userinfo setting
+      await setCookieInfo(event, config, userinfo)
     } catch (err) {
       logger.error('[CALLBACK]: ' + err)
     }
