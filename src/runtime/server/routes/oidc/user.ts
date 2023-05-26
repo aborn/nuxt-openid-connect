@@ -45,8 +45,8 @@ export default defineEventHandler(async (event) => {
   } else if (refreshToken) {
     logger.info('userinfo:refresh token')
     const tokenSet = await issueClient.refresh(refreshToken)
-    console.log('refreshed and validated tokens %j', tokenSet)
-    console.log('refreshed ID Token claims %j', tokenSet.claims())
+    // console.log('refreshed and validated tokens %j', tokenSet)
+    // console.log('refreshed ID Token claims %j', tokenSet.claims())
     if (tokenSet.access_token) {
       const userinfo = await issueClient.userinfo(tokenSet.access_token)
       setCookieTokenAndRefreshToken(event, config, tokenSet)

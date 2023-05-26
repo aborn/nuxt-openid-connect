@@ -1,12 +1,12 @@
-import { defineEventHandler, getCookie, setCookie } from 'h3'
-import { encrypt, decrypt } from './encrypt'
-import { logger } from './logger'
+import { setCookie } from 'h3'
+import { encrypt } from './encrypt'
 
 export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet: any) => {
   // token setting
   if (tokenSet && tokenSet.expires_at) {
+    const expireDate = new Date(tokenSet.expires_at * 1000) // second to ms
     setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
-      expires: tokenSet.expires_at,
+      expires: expireDate,
       ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
     })
   } else {
@@ -39,7 +39,7 @@ export const setCookieInfo = async (event: any, config: any, userinfo: any) => {
       const encryptedText = await encrypt(JSON.stringify(userinfo), config)
       setCookie(event, config.cookiePrefix + 'user_info', encryptedText, { ...config.cookieFlags['user_info' as keyof typeof config.cookieFlags] })
     } catch (err) {
-      logger.error('encrypted userinfo error.', err)
+      console.error('encrypted userinfo error.', err)
     }
   }
 }
