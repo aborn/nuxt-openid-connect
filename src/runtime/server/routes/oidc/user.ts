@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
     try {
       // load user info from oidc server.
       const userinfo = await issueClient.userinfo(accesstoken)
-      console.log('userinfo %j', userinfo) // refresh_token
       // add encrypted userinfo to cookies.
       await setCookieInfo(event, config, userinfo)
       return userinfo
