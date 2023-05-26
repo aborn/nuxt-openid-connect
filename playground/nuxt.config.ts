@@ -52,7 +52,7 @@ export default defineNuxtConfig({
       debug: true,
       response_type: 'code',
       secret: 'oidc._sessionid',
-      isCookieUserInfo: false, // whether put userinfo to cookie.
+      isCookieUserInfo: true, // whether put userinfo to cookie.
       cookie: { loginName: '' },
       cookiePrefix: 'oidc._',
       cookieEncrypt: true,
