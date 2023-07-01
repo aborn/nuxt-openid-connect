@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
   const { op, config } = useRuntimeConfig().openidConnect
   const responseMode = getResponseMode(config)
   const sessionid = getCookie(event, config.secret)
-  deleteCookie(event, config.secret)
   const redirectUrl = getRedirectUrl(req.url)
   // logger.info('---Callback. redirectUrl:' + redirectUrl)
   // logger.info(' -- req.url:' + req.url + '   #method:' + req.method + ' #response_mode:' + responseMode)
@@ -35,6 +34,8 @@ export default defineEventHandler(async (event) => {
 
   const issueClient = await initClient(op, req, [defCallBackUrl, callbackUrl])
   const params = issueClient.callbackParams(request)
+  logger.info('params=', params)
+  logger.info('sessionid:' + sessionid)
 
   if (params.access_token) {
     // Implicit ID Token Flow: access_token
@@ -46,6 +47,7 @@ export default defineEventHandler(async (event) => {
     // Authorization Code Flow: code -> access_token
     logger.debug('[CALLBACK]: has code in params, code:' + params.code + ' ,sessionid=' + sessionid)
     const tokenSet = await issueClient.callback(callbackUrl, params, { nonce: sessionid })
+    deleteCookie(event, config.secret)
     if (tokenSet.access_token) {
       await processUserInfo(tokenSet.access_token, tokenSet, event)
     }
@@ -54,14 +56,26 @@ export default defineEventHandler(async (event) => {
   } else {
     // Error dealing.
     // eslint-disable-next-line no-lonely-if
-    if (params.error) {
+    if (params.id_token) {
+      const tokenSet = await issueClient.callback(callbackUrl, params, { nonce: sessionid })
+      logger.info('1# received and validated tokens %j', tokenSet)
+      logger.info('2# validated ID Token claims %j', tokenSet.claims())
+      if (tokenSet.access_token) {
+        await processUserInfo(tokenSet.access_token, tokenSet, event)
+      } else {
+        logger.info('3# fgg')
+        await processUserInfo(tokenSet.claims(), tokenSet, event)
+      }
+      res.writeHead(302, { Location: redirectUrl || '/' })
+      res.end()
+    } else if (params.error) {
       // redirct to auth failed error page.
       logger.error('[CALLBACK]: error callback')
       logger.error(params.error + ', error_description:' + params.error_description)
       res.writeHead(302, { Location: '/oidc/error' })
       res.end()
     } else if (responseMode === 'fragment') {
-      logger.warn('[CALLBACK]: callback redirect')
+      logger.warn('[CALLBACK]: callback redirect responseMode="fragment"' + 'redirect to:==> /oidc/cbt?redirect=' + redirectUrl)
       res.writeHead(302, { Location: '/oidc/cbt?redirect=' + redirectUrl })
       res.end()
     } else {
@@ -71,9 +85,9 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  async function processUserInfo(accessToken: string, tokenSet: any, event: any) {
+  async function processUserInfo(accessTokenOrInfo: string | object, tokenSet: any, event: any) {
     try {
-      const userinfo = await issueClient.userinfo(accessToken)
+      const userinfo = (typeof accessTokenOrInfo === 'string') ? await issueClient.userinfo(accessTokenOrInfo) : accessTokenOrInfo
       const { config } = useRuntimeConfig().openidConnect
 
       // token and refresh token setting
