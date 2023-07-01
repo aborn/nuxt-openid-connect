@@ -3,7 +3,7 @@ import { defineEventHandler, getCookie, setCookie, deleteCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
 import { logger } from '../../../utils/logger'
-import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode, setCookieInfo, setCookieTokenAndRefreshToken } from '../../../utils/utils'
+import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode, setCookieInfo, setCookieTokenAndRefreshToken, setIdToken } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {

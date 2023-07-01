@@ -1,19 +1,32 @@
 import { setCookie } from 'h3'
 import { encrypt } from './encrypt'
 
+export const setIdToken = (event: any, config: any, tokenSet: any) => {
+  if (tokenSet.id_token) {
+    const expireDate = new Date(tokenSet.exp * 1000) // second to ms
+    console.log('id_token setting.')
+    setCookie(event, config.cookiePrefix + 'id_token', tokenSet.id_token, {
+      expires: expireDate,
+      ...config.cookieFlags['id_token' as keyof typeof config.cookieFlags]
+    })
+  }
+}
+
 export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet: any) => {
   // token setting
-  if (tokenSet && tokenSet.expires_at) {
-    const expireDate = new Date(tokenSet.expires_at * 1000) // second to ms
-    setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
-      expires: expireDate,
-      ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
-    })
-  } else {
-    setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
-      maxAge: config.cookieMaxAge,
-      ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
-    })
+  if (tokenSet.access_token) {
+    if (tokenSet && tokenSet.expires_at) {
+      const expireDate = new Date(tokenSet.expires_at * 1000) // second to ms
+      setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
+        expires: expireDate,
+        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
+      })
+    } else {
+      setCookie(event, config.cookiePrefix + 'access_token', tokenSet.access_token, {
+        maxAge: config.cookieMaxAge,
+        ...config.cookieFlags['access_token' as keyof typeof config.cookieFlags]
+      })
+    }
   }
 
   // refresh token setting
@@ -21,6 +34,11 @@ export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet:
     setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
       maxAge: tokenSet.refresh_expires_in
     })
+  }
+
+  // id_token setting
+  if (tokenSet.id_token && !tokenSet.access_token) {
+    setIdToken(event, config, tokenSet)
   }
 }
 
