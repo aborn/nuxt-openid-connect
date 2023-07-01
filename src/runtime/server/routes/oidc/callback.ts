@@ -77,7 +77,9 @@ export default defineEventHandler(async (event) => {
       const { config } = useRuntimeConfig().openidConnect
 
       // token and refresh token setting
-      setCookieTokenAndRefreshToken(event, config, tokenSet)
+      if (tokenSet) {
+        setCookieTokenAndRefreshToken(event, config, tokenSet)
+      }
 
       // userinfo setting
       await setCookieInfo(event, config, userinfo)
