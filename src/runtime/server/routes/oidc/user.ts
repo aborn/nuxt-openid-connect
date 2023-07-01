@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const sessionid = getCookie(event, config.secret)
   const accesstoken = getCookie(event, config.cookiePrefix + 'access_token')
+  const idToken = getCookie(event, config.cookiePrefix + 'id_token')
   const refreshToken = getCookie(event, config.cookiePrefix + 'refresh_token')
   const userinfoCookie = getCookie(event, config.cookiePrefix + 'user_info')
   const issueClient = await initClient(op, event.node.req, [])
@@ -55,6 +56,12 @@ export default defineEventHandler(async (event) => {
       return {}
     }
     //  logger.info('userinfo:' + userinfo)
+  } else if (idToken) {
+    logger.info('id_token==', idToken)
+    const tokenSet = await issueClient.callback('/', { id_token: idToken })
+    logger.info('111# received and validated tokens %j', tokenSet)
+    logger.info('222# validated ID Token claims %j', tokenSet.claims())
+    return tokenSet.claims()
   } else {
     logger.debug('[USER]: empty accesstoken for access userinfo')
     return {}
