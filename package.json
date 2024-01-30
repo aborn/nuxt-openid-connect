@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openid-connect",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "An nuxt 3 module with OpenID-Connect(OIDC) integration.",
   "keywords": [
     "nuxt",
@@ -30,12 +30,14 @@
     "prepack": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:preview": "nuxi preview playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "lint": "eslint .",
+    "test": "vitest run",
     "pub": "npm publish --access public"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.2.2",
+    "@nuxt/kit": "^3.9.3",
     "defu": "^6.0.0",
     "openid-client": "^5.1.6",
     "uuid": "^9.0.0"
@@ -43,10 +45,11 @@
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
-    "@types/node": "^18.14.2",
+    "@types/node": "^20.11.10",
     "@types/uuid": "^8.3.4",
     "eslint": "latest",
-    "nuxt": "^3.2.2"
+    "nuxt": "^3.9.3",
+    "typescript": "^5.3.3"
   },
   "bugs": {
     "url": "https://github.com/aborn/nuxt-openid-connect/issues"

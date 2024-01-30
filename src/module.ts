@@ -2,7 +2,6 @@ import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
 import { defu } from 'defu'
 import { name, version } from '../package.json'
-import { logger } from './runtime/utils/logger'
 
 export type CookieSerializeOptions = {
   domain?: string | undefined;
@@ -82,9 +81,8 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   setup(options, nuxt) {
-    logger.level = options.config.debug === true ? 5 : 0 // 4 = debug, 5 = trace
-    logger.info('[DEBUG MODE]: ', options.config.debug)
-    logger.debug('[WITHOUT ENV VARS] options:', options)
+    console.log('[DEBUG MODE]: ', options.config.debug)
+    console.debug('[WITHOUT ENV VARS] options:', options)
 
     const { resolve } = createResolver(import.meta.url)
     const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })

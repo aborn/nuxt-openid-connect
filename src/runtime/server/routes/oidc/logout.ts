@@ -1,10 +1,9 @@
 import { getCookie, deleteCookie, defineEventHandler } from 'h3'
-import { logger } from '../../../utils/logger'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {
   const res = event.node.res
-  logger.log('[LOGOUT]: oidc/logout calling')
+  console.log('[LOGOUT]: oidc/logout calling')
 
   const { config } = useRuntimeConfig().openidConnect
   deleteCookie(event, config.secret)

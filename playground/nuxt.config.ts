@@ -38,10 +38,10 @@ export default defineNuxtConfig({
   openidConnect: {
     addPlugin: true,
     op: {
-      issuer: 'http://192.168.24.103:8080/realms/test', // change to your OP addrress
+      issuer: 'http://localhost:8080/realms/test', // change to your OP addrress
       clientId: 'testClient',
       clientSecret: 'cnuLA78epx8s8vMbRxcaiXbzlS4u8bSA',
-      callbackUrl: 'http://192.168.24.103:3000/oidc/callback', // optional
+      callbackUrl: 'http://localhost:3000/oidc/callback', // optional
       scope: [
         'email',
         'profile',

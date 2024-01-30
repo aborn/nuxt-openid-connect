@@ -1,14 +1,12 @@
 import { getCookie, deleteCookie, defineEventHandler } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt, decrypt } from '../../../utils/encrypt'
-import { logger } from '../../../utils/logger'
 import { setCookieInfo, setCookieTokenAndRefreshToken } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const { config, op } = useRuntimeConfig().openidConnect
-  logger.debug('[USER]: oidc/user calling')
-  logger.trace('[USER]: ' + event.req.headers.cookie)
+  console.log('[USER]: oidc/user calling')
 
   const sessionid = getCookie(event, config.secret)
   const accesstoken = getCookie(event, config.cookiePrefix + 'access_token')
@@ -17,11 +15,11 @@ export default defineEventHandler(async (event) => {
   const issueClient = await initClient(op, event.node.req, [])
 
   if (userinfoCookie) {
-    logger.info('userinfo:Cookie')
+    console.log('userinfo:Cookie')
     const userInfoStr: string | undefined = await decrypt(userinfoCookie, config)
     return JSON.parse(userInfoStr ?? '')
   } else if (accesstoken) {
-    logger.info('userinfo:accesstoken')
+    console.log('userinfo:accesstoken')
     try {
       // load user info from oidc server.
       const userinfo = await issueClient.userinfo(accesstoken)
@@ -29,7 +27,7 @@ export default defineEventHandler(async (event) => {
       await setCookieInfo(event, config, userinfo)
       return userinfo
     } catch (err) {
-      logger.error('[USER]: ' + err)
+      console.error('[USER]: ' + err)
       deleteCookie(event, config.secret)
       deleteCookie(event, config.cookiePrefix + 'access_token')
       deleteCookie(event, config.cookiePrefix + 'user_info')
@@ -42,7 +40,7 @@ export default defineEventHandler(async (event) => {
       return {}
     }
   } else if (refreshToken) {
-    logger.info('userinfo:refresh token')
+    console.log('userinfo:refresh token')
     const tokenSet = await issueClient.refresh(refreshToken)
     // console.log('refreshed and validated tokens %j', tokenSet)
     // console.log('refreshed ID Token claims %j', tokenSet.claims())
@@ -54,9 +52,9 @@ export default defineEventHandler(async (event) => {
     } else {
       return {}
     }
-    //  logger.info('userinfo:' + userinfo)
+    //  console.log('userinfo:' + userinfo)
   } else {
-    logger.debug('[USER]: empty accesstoken for access userinfo')
+    console.log('[USER]: empty accesstoken for access userinfo')
     return {}
   }
 })
