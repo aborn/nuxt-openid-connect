@@ -2,12 +2,11 @@ import { defineEventHandler, setCookie, getCookie } from 'h3'
 import { v4 as uuidv4 } from 'uuid'
 import { generators } from 'openid-client'
 import { initClient } from '../../../utils/issueclient'
-import { logger } from '../../../utils/logger'
 import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
-  logger.info('[Login]: oidc/login calling')
+  console.log('[Login]: oidc/login calling')
   const req = event.node.req
   const res = event.node.res
 
@@ -21,15 +20,15 @@ export default defineEventHandler(async (event) => {
   let sessionid = getCookie(event, config.secret)
   if (!sessionid) {
     sessionid = generators.nonce()
-    logger.info('[Login]: regenerate sessionid=' + sessionid)
+    console.log('[Login]: regenerate sessionid=' + sessionid)
   } else {
-    logger.info('[Login]: cookie sessionid=' + sessionid)
+    console.log('[Login]: cookie sessionid=' + sessionid)
   }
 
   const responseMode = getResponseMode(config)
   const scopes = op.scope.includes('openid') ? op.scope : [...op.scope, 'openid']
-  logger.info('[Login]: cabackurl & op.callbackUrl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
-  logger.info('  response_mode:' + responseMode + ', response_type:' + config.response_type + ', scopes:' + scopes.join(' '))
+  console.log('[Login]: cabackurl & op.callbackUrl & redirecturl: ', callbackUrl, op.callbackUrl, redirectUrl)
+  console.log('  response_mode:' + responseMode + ', response_type:' + config.response_type + ', scopes:' + scopes.join(' '))
 
   const parameters = {
     redirect_uri: callbackUrl,
@@ -39,7 +38,7 @@ export default defineEventHandler(async (event) => {
     scope: scopes.join(' ')
   }
   const authUrl = issueClient.authorizationUrl(parameters)
-  logger.info('[Login]: Auth Url: ' + authUrl + ',    #sessionid:' + sessionid)
+  console.log('[Login]: Auth Url: ' + authUrl + ',    #sessionid:' + sessionid)
 
   if (sessionid) {
     setCookie(event, sessionkey, sessionid, {
