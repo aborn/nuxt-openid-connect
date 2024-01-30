@@ -102,8 +102,8 @@ Here is an [usage example](https://github.com/aborn/nuxt-openid-connect/blob/mai
 
 - Clone repository
 - Install dependencies using `yarn install`
-- Run `npm run dev:prepare` to generate type stubs.
-- Use `npm run dev` to start [playground](./playground) in development mode.
+- Run `yarn dev:prepare` to generate type stubs.
+- Use `yarn run` to start [playground](./playground) in development mode.
 
 ## License
 
