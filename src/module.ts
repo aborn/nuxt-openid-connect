@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url'
-import { defineNuxtModule, addPlugin, resolveModule, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
 import { defu } from 'defu'
 import { name, version } from '../package.json'
 
@@ -85,7 +85,7 @@ export default defineNuxtModule<ModuleOptions>({
     console.debug('[WITHOUT ENV VARS] options:', options)
 
     const { resolve } = createResolver(import.meta.url)
-    const resolveRuntimeModule = (path: string) => resolveModule(path, { paths: resolve('./runtime') })
+    const resolveRuntimeModule = (path: string) => resolve('./runtime', path)
 
     nuxt.hook('nitro:config', (nitroConfig) => {
       // Add server handlers
