@@ -1,11 +1,15 @@
 import { getCookie, deleteCookie, defineEventHandler } from 'h3'
+import { getRedirectUrl } from '../../../utils/utils';
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler((event) => {
   const res = event.node.res
+  const req = event.node.req
+
   console.log('[LOGOUT]: oidc/logout calling')
 
   const { config } = useRuntimeConfig().openidConnect
+  const redirectUrl = getRedirectUrl(req.url)
   deleteCookie(event, config.secret)
   deleteCookie(event, config.cookiePrefix + 'access_token')
   deleteCookie(event, config.cookiePrefix + 'refresh_token')
@@ -19,6 +23,6 @@ export default defineEventHandler((event) => {
     }
   }
 
-  res.writeHead(302, { Location: '/' })
+  res.writeHead(302, { Location: redirectUrl })
   res.end()
 })

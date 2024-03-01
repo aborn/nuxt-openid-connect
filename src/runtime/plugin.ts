@@ -101,14 +101,17 @@ export class Oidc {
     }
   }
 
-  logout() {
+  logout(redirect = '/') {
     // TODO clear user info when accessToken expired.
     if (process.client) {
+      const params = new URLSearchParams({ redirect })
+      const toStr = '/oidc/logout?' + params.toString()
+
       this.$useState.value.user = {}
       this.$useState.value.isLoggedIn = false
 
       this.$storage.removeUserInfo()
-      window.location.replace('/oidc/logout')
+      window.location.replace(toStr)
     }
   }
 }
