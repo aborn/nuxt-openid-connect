@@ -60,6 +60,8 @@ export default defineNuxtConfig({
       cookieEncryptIV: 'ab83667c72eec9e4',
       cookieEncryptALGO: 'aes-256-cbc',
       cookieMaxAge: 24 * 60 * 60, //  default one day
+      hasCookieRefreshExpireDate: false, // Set this to true if your provider has an refresh_expires_in date for the refresh token
+      cookieRefreshDefaultMaxAge: 24 * 60 * 60, //  default one day if the hasCookieRefreshExpireDate is false
       cookieFlags: {
         access_token: {
           httpOnly: true,
