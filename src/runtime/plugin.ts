@@ -61,7 +61,7 @@ export class Oidc {
 
   async fetchUser() {
     try {
-      if (process.server) {
+      if (import.meta.server) {
         // console.log('serve-render: fetchUser from cookie.')
         const { config } = useRuntimeConfig()?.openidConnect
         const userinfoCookie = useCookie(config.cookiePrefix + 'user_info')
@@ -94,7 +94,7 @@ export class Oidc {
   }
 
   login(redirect = '/') {
-    if (process.client) {
+    if (import.meta.client) {
       const params = new URLSearchParams({ redirect })
       const toStr = '/oidc/login?' + params.toString()
       window.location.replace(toStr)
@@ -103,7 +103,7 @@ export class Oidc {
 
   logout() {
     // TODO clear user info when accessToken expired.
-    if (process.client) {
+    if (import.meta.client) {
       this.$useState.value.user = {}
       this.$useState.value.isLoggedIn = false
 
