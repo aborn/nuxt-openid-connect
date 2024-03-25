@@ -106,7 +106,7 @@ export class Storage {
   // origin from https://github.com/nuxt-community/auth-module
   isLocalStorageEnabled(): boolean {
     // Local Storage only exists in the browser
-    if (!process.client) {
+    if (!import.meta.client) {
       return false
     }
 
