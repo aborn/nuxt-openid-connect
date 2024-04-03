@@ -21,7 +21,7 @@ OpenID-Connect(OIDC) integration module for nuxt 3.0. (V0.4.0+ support nuxt 3.0.
 
 - Add to a project
 ```bash
-yarn add nuxt-openid-connect
+npx nuxi@latest module add nuxt-openid-connect
 ```
 
 - Then, add `nuxt-openid-connect` module to nuxt.config.ts and change to your configs (`openidConnect`):
