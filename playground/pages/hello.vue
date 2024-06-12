@@ -1,9 +1,12 @@
 <template>
   <div>
-    Nuxt module playground!
-    <div>
-      {{ $oidc.user }}
-    </div>
+    <NavBar />
+    <main class="container">
+      <div>
+        Nuxt module playground!
+        {{ $oidc.user }}
+      </div>
+    </main>
   </div>
 </template>
 
@@ -27,7 +30,7 @@ export default {
     return {
     }
   },
-  mounted () {
+  mounted() {
     console.log('mounted...')
     const { $oidc } = useNuxtApp()
     console.log($oidc.user)

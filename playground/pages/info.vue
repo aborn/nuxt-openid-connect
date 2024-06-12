@@ -10,7 +10,7 @@
       <button v-if="!$oidc.isLoggedIn" @click="$oidc.login()">
         Login
       </button>
-      <button v-else @click="$oidc.logout()">
+      <button v-else @click="$oidc.logout('/public')">
         Logout
       </button>
     </main>

@@ -17,11 +17,16 @@ export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet:
   }
 
   // refresh token setting
-  if (tokenSet && tokenSet.refresh_expires_in && tokenSet.refresh_token) {
-    setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
-      maxAge: tokenSet.refresh_expires_in
-    })
-  }
+    if (tokenSet && tokenSet.refresh_expires_in && tokenSet.refresh_token) {
+        setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
+            maxAge: tokenSet.refresh_expires_in
+        })
+    } else if (tokenSet && !config.hasCookieRefreshExpireDate && tokenSet.refresh_token) {
+        const expireDate = new Date(Date.now() + config.cookieRefreshDefaultMaxAge * 1000);
+        setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
+            expires: expireDate
+        })
+    }
 }
 
 export const setCookieInfo = async (event: any, config: any, userinfo: any) => {
