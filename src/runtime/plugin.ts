@@ -1,7 +1,7 @@
 import { defineNuxtPlugin } from '#app'
-import { Storage, StorageOptions } from './storage'
+import { Storage } from './storage'
 import { isUnset, isSet, getCleanUrl } from './utils/utils'
-import { encrypt, decrypt } from './utils/encrypt'
+import { decrypt } from './utils/encrypt'
 import { useState, useFetch, useRuntimeConfig, useCookie } from '#imports'
 
 interface UseState {
