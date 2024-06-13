@@ -17,16 +17,16 @@ export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet:
   }
 
   // refresh token setting
-    if (tokenSet && tokenSet.refresh_expires_in && tokenSet.refresh_token) {
-        setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
-            maxAge: tokenSet.refresh_expires_in
-        })
-    } else if (tokenSet && !config.hasCookieRefreshExpireDate && tokenSet.refresh_token) {
-        const expireDate = new Date(Date.now() + config.cookieRefreshDefaultMaxAge * 1000);
-        setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
-            expires: expireDate
-        })
-    }
+  if (tokenSet && tokenSet.refresh_expires_in && tokenSet.refresh_token) {
+    setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
+      maxAge: tokenSet.refresh_expires_in
+    })
+  } else if (tokenSet && !config.hasCookieRefreshExpireDate && tokenSet.refresh_token) {
+    const expireDate = new Date(Date.now() + config.cookieRefreshDefaultMaxAge * 1000);
+    setCookie(event, config.cookiePrefix + 'refresh_token', tokenSet.refresh_token, {
+      expires: expireDate
+    })
+  }
 }
 
 export const setCookieInfo = async (event: any, config: any, userinfo: any) => {
@@ -54,13 +54,15 @@ export const isUnset = (o: unknown): boolean =>
 
 export const isSet = (o: unknown): boolean => !isUnset(o)
 
-export const getRedirectUrl = (uri: string | null | undefined): string => {
+export const getRedirectUrl = (uri: string | null | undefined, baseURL: string | undefined = undefined): string => {
   if (!uri) {
-    return '/'
+    return baseURL || '/'
   }
   const idx = uri.indexOf('?')
   const searchParams = new URLSearchParams(idx >= 0 ? uri.substring(idx) : uri)
-  return searchParams.get('redirect') || '/'
+  const redirUrl = (baseURL ? baseURL + '/' : '') + searchParams.get('redirect')
+  const cleanUrl = getCleanUrl(redirUrl)
+  return cleanUrl || baseURL || '/'
 }
 
 export function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: string | undefined): string {
@@ -72,9 +74,15 @@ export function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: s
 }
 
 export function getDefaultBackUrl(redirectUrl: string, host: string | undefined): string {
-  return 'http://' + host + '/oidc/cbt?redirect=' + redirectUrl
+  const config = useRuntimeConfig()
+  const baseUrl = config.app.baseURL
+  console.log('------>baseUrl:' + baseUrl)
+  return getCleanUrl('http://' + host + baseUrl + '/oidc/cbt?redirect=' + redirectUrl)
 }
 
+export function getCleanUrl(url: string): string {
+  return url.indexOf(':') >=0 ? url.replace(/([^:]\/)\/+/g, "$1") : url.replace(/\/\/+/g, '/')
+}
 /**
    * Response Mode
    *   The Response Mode determines how the Authorization Server returns result parameters from the Authorization Endpoint.

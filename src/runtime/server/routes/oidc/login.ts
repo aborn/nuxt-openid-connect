@@ -6,13 +6,16 @@ import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode } fr
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
+  console.log('---------oidc nitro --------------')
   console.log('[Login]: oidc/login calling')
   const req = event.node.req
   const res = event.node.res
+  const { app } = useRuntimeConfig()
+  const baseUrl = app.baseURL
 
   const { op, config } = useRuntimeConfig().openidConnect
-  const redirectUrl = getRedirectUrl(req.url)
-  const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
+  const redirectUrl = getRedirectUrl(req.url, baseUrl)
+  const callbackUrl = getCallbackUrl('', redirectUrl, req.headers.host)
   const defCallBackUrl = getDefaultBackUrl(redirectUrl, req.headers.host)
 
   const issueClient = await initClient(op, req, [defCallBackUrl, callbackUrl])

@@ -1,6 +1,7 @@
 
 export default defineNuxtConfig({
   app: {
+    baseURL: '/openid/',
     head: {
       title: 'OIDC',
       link: [

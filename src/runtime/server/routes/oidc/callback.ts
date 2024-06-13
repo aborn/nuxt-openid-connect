@@ -2,13 +2,16 @@ import * as http from 'http'
 import { defineEventHandler, getCookie, setCookie, deleteCookie } from 'h3'
 import { initClient } from '../../../utils/issueclient'
 import { encrypt } from '../../../utils/encrypt'
-import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode, setCookieInfo, setCookieTokenAndRefreshToken } from '../../../utils/utils'
+import { getRedirectUrl, getCallbackUrl, getDefaultBackUrl, getResponseMode, setCookieInfo, setCookieTokenAndRefreshToken, getCleanUrl } from '../../../utils/utils'
 import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
+  console.log('---------oidc nitro --------------')
   const req = event.node.req
   const res = event.node.res
   console.log('[CALLBACK]: oidc/callback calling, method:' + req.method)
+  const { app } = useRuntimeConfig()
+  const baseUrl = app.baseURL
 
   let request = req
   if (req.method === 'POST') {
@@ -25,11 +28,12 @@ export default defineEventHandler(async (event) => {
   const responseMode = getResponseMode(config)
   const sessionid = getCookie(event, config.secret)
   deleteCookie(event, config.secret)
+  // Note: here not need add baseUrl, case in login already added baseUrl.
   const redirectUrl = getRedirectUrl(req.url)
   // console.log('---Callback. redirectUrl:' + redirectUrl)
   // console.log(' -- req.url:' + req.url + '   #method:' + req.method + ' #response_mode:' + responseMode)
 
-  const callbackUrl = getCallbackUrl(op.callbackUrl, redirectUrl, req.headers.host)
+  const callbackUrl = getCallbackUrl('', redirectUrl, req.headers.host)
   const defCallBackUrl = getDefaultBackUrl(redirectUrl, req.headers.host)
 
   const issueClient = await initClient(op, req, [defCallBackUrl, callbackUrl])
@@ -39,7 +43,7 @@ export default defineEventHandler(async (event) => {
     // Implicit ID Token Flow: access_token
     console.log('[CALLBACK]: has access_token in params, accessToken:' + params.access_token)
     await processUserInfo(params.access_token, null, event)
-    res.writeHead(302, { Location: redirectUrl || '/' })
+    res.writeHead(302, { Location: redirectUrl || baseUrl })
     res.end()
   } else if (params.code) {
     // Authorization Code Flow: code -> access_token
@@ -48,7 +52,7 @@ export default defineEventHandler(async (event) => {
     if (tokenSet.access_token) {
       await processUserInfo(tokenSet.access_token, tokenSet, event)
     }
-    res.writeHead(302, { Location: redirectUrl || '/' })
+    res.writeHead(302, { Location: redirectUrl || baseUrl })
     res.end()
   } else {
     // Error dealing.
@@ -57,15 +61,15 @@ export default defineEventHandler(async (event) => {
       // redirct to auth failed error page.
       console.error('[CALLBACK]: error callback')
       console.error(params.error + ', error_description:' + params.error_description)
-      res.writeHead(302, { Location: '/oidc/error' })
+      res.writeHead(302, { Location: getCleanUrl(baseUrl + '/oidc/error') })
       res.end()
     } else if (responseMode === 'fragment') {
       console.warn('[CALLBACK]: callback redirect')
-      res.writeHead(302, { Location: '/oidc/cbt?redirect=' + redirectUrl })
+      res.writeHead(302, { Location: getCleanUrl(baseUrl + '/oidc/cbt?redirect=' + redirectUrl) })
       res.end()
     } else {
       console.error('[CALLBACK]: error callback')
-      res.writeHead(302, { Location: redirectUrl || '/' })
+      res.writeHead(302, { Location: redirectUrl || baseUrl })
       res.end()
     }
   }

@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from '#app'
 import { Storage, StorageOptions } from './storage'
-import { isUnset, isSet } from './utils/utils'
+import { isUnset, isSet, getCleanUrl } from './utils/utils'
 import { encrypt, decrypt } from './utils/encrypt'
 import { useState, useFetch, useRuntimeConfig, useCookie } from '#imports'
 
@@ -95,23 +95,27 @@ export class Oidc {
 
   login(redirect = '/') {
     if (import.meta.client) {
+      const { app } = useRuntimeConfig()
       const params = new URLSearchParams({ redirect })
-      const toStr = '/oidc/login?' + params.toString()
-      window.location.replace(toStr)
+      const link = '/oidc/login?' + params.toString()
+      window.location.replace(getCleanUrl(app.baseURL + link))
+      // navigateTo({ path: link })
     }
   }
 
   logout(redirect = '/') {
     // TODO clear user info when accessToken expired.
     if (import.meta.client) {
+      const { app } = useRuntimeConfig()
       const params = new URLSearchParams({ redirect })
-      const toStr = '/oidc/logout?' + params.toString()
+      const link = '/oidc/logout?' + params.toString()
 
       this.$useState.value.user = {}
       this.$useState.value.isLoggedIn = false
 
       this.$storage.removeUserInfo()
-      window.location.replace(toStr)
+      window.location.replace(getCleanUrl(app.baseURL + link))
+      // navigateTo({ path: link })
     }
   }
 }
