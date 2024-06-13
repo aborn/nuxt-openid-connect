@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       issuer: 'your_issuer_value',
       clientId: 'your_issuer_clientid',
       clientSecret: 'secret',
-      callbackUrl: '',   // optional
+      callbackUrl: '',   // deprecated from 0.8.0
       scope: [
         'email',
         'profile',
