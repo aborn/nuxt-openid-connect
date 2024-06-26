@@ -65,12 +65,8 @@ export const getRedirectUrl = (uri: string | null | undefined, baseURL: string |
   return cleanUrl || baseURL || '/'
 }
 
-export function getCallbackUrl(callbackUrl: string, redirectUrl: string, host: string | undefined): string {
-  if ((callbackUrl && callbackUrl.length > 0)) {
-    return callbackUrl.includes('?') ? (callbackUrl + '&redirect=' + redirectUrl) : (callbackUrl + '?redirect=' + redirectUrl)
-  } else {
-    return getDefaultBackUrl(redirectUrl, host)
-  }
+export function getCallbackUrl(redirectUrl: string, host: string | undefined): string {
+    return getDefaultBackUrl(redirectUrl, host) 
 }
 
 export function getDefaultBackUrl(redirectUrl: string, host: string | undefined): string {
