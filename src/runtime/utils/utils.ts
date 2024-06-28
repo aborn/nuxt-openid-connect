@@ -1,5 +1,6 @@
 import { setCookie } from 'h3'
 import { encrypt } from './encrypt'
+import { useRuntimeConfig } from '#imports'
 
 export const setCookieTokenAndRefreshToken = (event: any, config: any, tokenSet: any) => {
   // token setting
